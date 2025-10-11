@@ -15,13 +15,13 @@ Dibangun dengan **Flutter**, aplikasi ini menghadirkan tampilan modern, ringan, 
 
 ### 🚀 **Features**
 
-✨ Manajemen Data Warga
-📊 Pencatatan dan Laporan Keuangan
-📅 Jadwal & Kegiatan Warga
-📢 Broadcast & Informasi
-💬 Pesan dan Aspirasi Warga
-🔐 Login Multi-Role (Admin, Dosen, Sarpras, dll.)
-📱 Desain Responsif dan Ringan
+✨ Manajemen Data Warga <br>
+📊 Pencatatan dan Laporan Keuangan <br>
+📅 Jadwal & Kegiatan Warga <br>
+📢 Broadcast & Informasi <br>
+💬 Pesan dan Aspirasi Warga <br>
+🔐 Login Multi-Role (Admin, Dosen, Sarpras, Mahasiswa,Tendik,Teknisi) <br>
+📱 Desain Responsif dan Ringan <br>
 
 ---
 
