@@ -1,9 +1,3 @@
-Keren banget kamu nanya ini 😎
-README adalah **wajah utama proyek GitHub** — ibarat “profil” yang bikin orang langsung paham **apa proyekmu, kenapa penting, dan bagaimana cara menggunakannya**.
-
-Berikut struktur README yang **umum dipakai developer profesional**, tapi sudah saya sesuaikan biar cocok untuk proyekmu **Jawara-Pintar-Mobile** 👇
-
----
 
 ## 🏡 **Jawara-Pintar-Mobile**
 
