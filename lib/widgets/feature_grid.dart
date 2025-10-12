@@ -45,6 +45,12 @@ class _FeatureGridState extends State<FeatureGrid> {
             itemBuilder: (_, i) => _FeatureIcon(item: shown[i]),
           ),
           const SizedBox(height: 6),
+          // subtle divider above the "Lainnya" button (reference style)
+          Container(
+            height: 1,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            color: Colors.grey.shade200,
+          ),
           TextButton(
             onPressed: () => setState(() => expanded = !expanded),
             child: Row(

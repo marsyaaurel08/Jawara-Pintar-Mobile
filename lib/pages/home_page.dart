@@ -5,6 +5,7 @@ import '../../widgets/slider_stat_card.dart';
 import '../../widgets/feature_grid.dart';
 import '../../../widgets/bottom_nav_scaffold.dart';
 import 'analytics_page.dart';
+import 'search_page.dart';
 // removed: import '../../widgets/home_preview.dart';
 
 class HomePage extends StatefulWidget {
@@ -201,6 +202,40 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 12),
           SliderStatCard(slides: buildDefaultSlides()),
           const SizedBox(height: 12),
+
+          // search box - opens full screen search
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+            child: GestureDetector(
+              onTap: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => SearchPage(features: features),
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  borderRadius: BorderRadius.circular(28),
+                ),
+                child: Row(
+                  children: const [
+                    Icon(Icons.search, color: Color(0xFF2E6BFF)),
+                    SizedBox(width: 8),
+                    Text(
+                      'Cari Fitur',
+                      style: TextStyle(color: Color(0xFF2E6BFF)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           FeatureGrid(items: features),
           const SizedBox(height: 16),
         ],
@@ -214,122 +249,137 @@ class _HomePageState extends State<HomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-          // segmented control similar to analytics
-          Container(
-            padding: const EdgeInsets.all(8),
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: List.generate(3, (i) {
-                final accent = i == 0
-                    ? const Color(0xFF2E6BFF)
-                    : i == 1
-                        ? const Color(0xFF00BFA6)
-                        : const Color(0xFFFFA726);
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () => setState(() => dataIndex = i),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 220),
-                      curve: Curves.easeInOut,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: i == dataIndex ? Colors.white : Colors.transparent,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: i == dataIndex
-                            ? [
-                                BoxShadow(
-                                    color: accent.withOpacity(0.08),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2)),
-                              ]
-                            : null,
-                        border: Border(left: BorderSide(color: i == dataIndex ? accent : Colors.transparent, width: 4)),
+        // segmented control similar to analytics
+        Container(
+          padding: const EdgeInsets.all(8),
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: List.generate(3, (i) {
+              final accent = i == 0
+                  ? const Color(0xFF2E6BFF)
+                  : i == 1
+                  ? const Color(0xFF00BFA6)
+                  : const Color(0xFFFFA726);
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () => setState(() => dataIndex = i),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeInOut,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: i == dataIndex ? Colors.white : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: i == dataIndex
+                          ? [
+                              BoxShadow(
+                                color: accent.withOpacity(0.08),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ]
+                          : null,
+                      border: Border(
+                        left: BorderSide(
+                          color: i == dataIndex ? accent : Colors.transparent,
+                          width: 4,
+                        ),
                       ),
-                      child: Center(
-                        child: Text(
-                          i == 0 ? 'Warga' : i == 1 ? 'Rumah' : 'Keluarga',
-                          style: TextStyle(
-                            fontWeight: i == dataIndex ? FontWeight.w700 : FontWeight.w600,
-                            color: i == dataIndex ? accent : Colors.black87,
-                          ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        i == 0
+                            ? 'Warga'
+                            : i == 1
+                            ? 'Rumah'
+                            : 'Keluarga',
+                        style: TextStyle(
+                          fontWeight: i == dataIndex
+                              ? FontWeight.w700
+                              : FontWeight.w600,
+                          color: i == dataIndex ? accent : Colors.black87,
                         ),
                       ),
                     ),
                   ),
-                );
-              }),
-            ),
+                ),
+              );
+            }),
           ),
+        ),
 
-          // Content area - height adapts
-          AnimatedSize(
-            duration: const Duration(milliseconds: 220),
-            curve: Curves.easeInOut,
-            child: IndexedStack(
-              index: dataIndex,
-              children: [
-                // Warga
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: const [
-                      Card(
-                        child: ListTile(
-                          leading: Icon(Icons.people, color: Color(0xFF2E6BFF)),
-                          title: Text('Daftar Warga'),
-                          subtitle: Text('Lihat, cari, dan kelola data warga'),
-                        ),
+        // Content area - height adapts
+        AnimatedSize(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeInOut,
+          child: IndexedStack(
+            index: dataIndex,
+            children: [
+              // Warga
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: const [
+                    Card(
+                      child: ListTile(
+                        leading: Icon(Icons.people, color: Color(0xFF2E6BFF)),
+                        title: Text('Daftar Warga'),
+                        subtitle: Text('Lihat, cari, dan kelola data warga'),
                       ),
-                      SizedBox(height: 8),
-                      Center(child: Text('Daftar Warga (placeholder)')),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 8),
+                    Center(child: Text('Daftar Warga (placeholder)')),
+                  ],
                 ),
+              ),
 
-                // Rumah
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: const [
-                      Card(
-                        child: ListTile(
-                          leading: Icon(Icons.home, color: Color(0xFF00BFA6)),
-                          title: Text('Daftar Rumah'),
-                          subtitle: Text('Rekap dan peta rumah'),
-                        ),
+              // Rumah
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: const [
+                    Card(
+                      child: ListTile(
+                        leading: Icon(Icons.home, color: Color(0xFF00BFA6)),
+                        title: Text('Daftar Rumah'),
+                        subtitle: Text('Rekap dan peta rumah'),
                       ),
-                      SizedBox(height: 8),
-                      Center(child: Text('Daftar Rumah (placeholder)')),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 8),
+                    Center(child: Text('Daftar Rumah (placeholder)')),
+                  ],
                 ),
+              ),
 
-                // Keluarga
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: const [
-                      Card(
-                        child: ListTile(
-                          leading: Icon(Icons.family_restroom, color: Color(0xFFFFA726)),
-                          title: Text('Daftar Keluarga'),
-                          subtitle: Text('Informasi per KK dan mutasi'),
+              // Keluarga
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: const [
+                    Card(
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.family_restroom,
+                          color: Color(0xFFFFA726),
                         ),
+                        title: Text('Daftar Keluarga'),
+                        subtitle: Text('Informasi per KK dan mutasi'),
                       ),
-                      SizedBox(height: 8),
-                      Center(child: Text('Daftar Keluarga (placeholder)')),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 8),
+                    Center(child: Text('Daftar Keluarga (placeholder)')),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
   Widget _buildKeuangan() {
