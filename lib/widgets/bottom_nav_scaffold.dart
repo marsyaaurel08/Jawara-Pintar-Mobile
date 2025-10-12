@@ -47,8 +47,8 @@ class BottomNavScaffold extends StatelessWidget {
                 ),
                 _navItem(
                   context,
-                  icon: Icons.event,
-                  label: 'Kegiatan',
+                  icon: Icons.show_chart,
+                  label: 'Analitik',
                   index: 3,
                 ),
                 // removed 'Akun' item as requested
