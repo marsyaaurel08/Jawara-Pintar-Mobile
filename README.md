@@ -2,7 +2,7 @@
 ## 🏡 **Jawara-Pintar-Mobile**
 
 **Solusi digital untuk manajemen keuangan dan kegiatan warga — kini dalam genggaman.**
-Versi mobile dari platform **Jawara Pintar (Web)** yang dikembangkan oleh **Kelompok 2**, untuk menghadirkan kemudahan akses dan manajemen komunitas melalui smartphone.
+Versi mobile dari platform **Jawara Pintar (Web)** yang dikembangkan oleh **Kelompok 4**, untuk menghadirkan kemudahan akses dan manajemen komunitas melalui smartphone.
 
 ---
 
