@@ -6,6 +6,7 @@ import '../../widgets/feature_grid.dart';
 import '../../../widgets/bottom_nav_scaffold.dart';
 import 'analytics_page.dart';
 import 'search_page.dart';
+import 'user_management_page.dart';
 // removed: import '../../widgets/home_preview.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,9 +18,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int tab = 0;
   int dataIndex = 0;
+  int analyticsInitialTab = 0;
 
   // SHORTCUTS sesuai requirement sistem kamu
-  late final List<FeatureItem> features = [
+  List<FeatureItem> get features => [
     // 1. Tagihan
     FeatureItem(
       id: 'billing',
@@ -145,7 +147,11 @@ class _HomePageState extends State<HomePage> {
       title: 'Pengguna',
       icon: Icons.manage_accounts_outlined,
       bg: const Color(0xFF0097A7),
-      onTap: () {},
+      onTap: () {
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const UserManagementPage()));
+      },
     ),
 
     // 15. Channel transfer (new placeholder)
@@ -181,7 +187,7 @@ class _HomePageState extends State<HomePage> {
         content = _buildKeuangan();
         break;
       case 3:
-        content = const AnalyticsPage();
+        content = AnalyticsPage(initialTab: analyticsInitialTab);
         break;
       default:
         content = _buildBeranda();
@@ -198,9 +204,25 @@ class _HomePageState extends State<HomePage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const DashboardHeader(greeting: 'Selamat Pagi, Taufik', subtitle: ''),
+          DashboardHeader(
+            title: 'Selamat datang',
+            name: 'Taufik Dimas Edystara',
+            onNotification: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Tidak ada notifikasi baru')),
+              );
+            },
+          ),
           const SizedBox(height: 12),
-          SliderStatCard(slides: buildDefaultSlides()),
+          SliderStatCard(
+            onViewAnalytics: (analyticsIndex) {
+              // switch bottom nav to Analitik and set which analytics sub-tab to show
+              setState(() {
+                analyticsInitialTab = analyticsIndex;
+                tab = 3;
+              });
+            },
+          ),
           const SizedBox(height: 12),
 
           // search box - opens full screen search
@@ -249,10 +271,24 @@ class _HomePageState extends State<HomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Title for Kependudukan tab
+        Padding(
+          padding: const EdgeInsets.all(19),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Kependudukan',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
         // segmented control similar to analytics
         Container(
-          padding: const EdgeInsets.all(8),
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.all(6),
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
           decoration: BoxDecoration(
             color: Colors.grey.shade100,
             borderRadius: BorderRadius.circular(12),
@@ -389,7 +425,21 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Keuangan', style: Theme.of(context).textTheme.titleLarge),
+            // Title for Keuangan tab
+            Padding(
+              padding: const EdgeInsets.all(19),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Keuangan',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(fontWeight: FontWeight.w700),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
             const SizedBox(height: 12),
             Card(
               child: ListTile(
@@ -441,43 +491,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  // Widget _buildKegiatan() {
-  //   return SingleChildScrollView(
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(16),
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.stretch,
-  //         children: [
-  //           Text(
-  //             'Kegiatan & Broadcast',
-  //             style: Theme.of(context).textTheme.titleLarge,
-  //           ),
-  //           const SizedBox(height: 12),
-  //           // 'Kegiatan Terdekat' preview removed as requested.
-  //           Card(
-  //             child: ListTile(
-  //               leading: const Icon(Icons.event, color: Color(0xFF26A69A)),
-  //               title: const Text('Kegiatan'),
-  //               subtitle: const Text('Daftar kegiatan warga'),
-  //               trailing: const Icon(Icons.chevron_right),
-  //             ),
-  //           ),
-  //           const SizedBox(height: 8),
-  //           Card(
-  //             child: ListTile(
-  //               leading: const Icon(
-  //                 Icons.campaign_outlined,
-  //                 color: Color(0xFF42A5F5),
-  //               ),
-  //               title: const Text('Broadcast'),
-  //               subtitle: const Text('Kirim pengumuman ke warga'),
-  //               trailing: const Icon(Icons.chevron_right),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 }
