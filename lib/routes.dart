@@ -10,6 +10,8 @@ class Routes {
   static const login = '/login';
   static const register = '/register';
 
+  static const String home = '/home';
+
   static const String kegiatan = '/kegiatan';
   static const String broadcast = '/broadcast';
   static const String aspirasi = '/aspirasi';
@@ -18,7 +20,7 @@ class Routes {
 final Map<String, WidgetBuilder> appRoutes = {
   Routes.login: (_) => const LoginPage(),
   Routes.register: (_) => const RegisterPage(),
-  '/home': (_) => const HomePage(),
+  Routes.home: (_) => const HomePage(),
   Routes.kegiatan: (_) => const KegiatanPage(),
   Routes.broadcast: (_) => const BroadcastPage(),
   Routes.aspirasi: (_) => const AspirasiPage(),
