@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
       title: 'Kegiatan',
       icon: Icons.event_note,
       bg: const Color(0xFF26A69A),
-      onTap: () {},
+      onTap: () => Navigator.pushNamed(context, '/kegiatan'),
     ),
 
     // 8. Broadcast
@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
       title: 'Broadcast',
       icon: Icons.campaign_outlined,
       bg: const Color(0xFF42A5F5),
-      onTap: () {},
+      onTap: () => Navigator.pushNamed(context, '/broadcast'),
     ),
 
     // 9. Aspirasi
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
       title: 'Aspirasi',
       icon: Icons.mark_chat_unread_outlined,
       bg: const Color(0xFF8D6E63),
-      onTap: () {},
+      onTap: () => Navigator.pushNamed(context, '/aspirasi'),
     ),
 
     // 10. Laporan Keuangan (new placeholder)
