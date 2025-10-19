@@ -73,15 +73,18 @@ class DetailWargaPage extends StatelessWidget {
     // Ambil data dari map
     final data = wargaData;
     final String namaLengkap = formatValue(data['nama']);
-    final String jenisKelamin = formatValue(data['jenisKelamin']);
+    // final String jenisKelamin = formatValue(data['jenisKelamin']); // Tidak lagi digunakan untuk ikon
     final Color statusColor = data['status'] == 'Hidup' ? _accentColor : Colors.red.shade700;
-    final IconData profileIcon = jenisKelamin == 'Perempuan' ? Icons.female : Icons.male;
+    
+    // PERUBAHAN DI SINI: Ganti ikon berdasarkan jenis kelamin menjadi ikon profil umum
+    // final IconData profileIcon = jenisKelamin == 'Perempuan' ? Icons.female : Icons.male; // Dihapus
+    const IconData profileIcon = Icons.person_pin; // Diganti dengan ikon profil umum
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Detail Warga',
-          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
         ),
         backgroundColor: _primaryColor,
         iconTheme: const IconThemeData(color: Colors.white, size: 22),
@@ -105,7 +108,8 @@ class DetailWargaPage extends StatelessWidget {
                       CircleAvatar(
                         radius: 35,
                         backgroundColor: _primaryColor.withOpacity(0.15),
-                        child: Icon(profileIcon, size: 40, color: _primaryColor),
+                        // Menggunakan Ikon Profil Umum
+                        child: const Icon(profileIcon, size: 40, color: _primaryColor),
                       ),
                       const SizedBox(width: 15),
                       Expanded(
@@ -150,7 +154,7 @@ class DetailWargaPage extends StatelessWidget {
                     _buildDetailRow(Icons.person, 'Nama Lengkap', namaLengkap, valueColor: Colors.black87),
                     _buildDetailRow(Icons.cake, 'TTL', 
                         '${formatValue(data['tempatLahir'])}, ${formatValue(data['tanggalLahir'])}'),
-                    _buildDetailRow(Icons.transgender, 'Jenis Kelamin', jenisKelamin),
+                    _buildDetailRow(Icons.transgender, 'Jenis Kelamin', formatValue(data['jenisKelamin'])),
                     _buildDetailRow(Icons.bloodtype, 'Gol. Darah', formatValue(data['golonganDarah'])),
                     _buildDetailRow(Icons.church, 'Agama', formatValue(data['agama'])),
                   ],
