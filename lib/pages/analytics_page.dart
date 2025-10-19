@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jawara_pintar_mobile/widgets/chart/analytics_tab_switcher.dart';
+import 'package:jawara_pintar_mobile/widgets/analytics/analytics_tab_switcher.dart';
 
 class AnalyticsPage extends StatefulWidget {
   final int initialTab;

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../models/feature_item.dart';
-import '../../widgets/dashboard_header.dart';
-import '../../widgets/slider_stat_card.dart';
-import '../../widgets/feature_grid.dart';
+import '../../widgets/home/dashboard_header.dart';
+import '../../widgets/home/slider_stat_card.dart';
+import '../../widgets/home/feature_grid.dart';
 import '../../../widgets/bottom_nav_scaffold.dart';
 import 'analytics_page.dart';
 import 'search_page.dart';
 import '../routes.dart';
-// removed: import '../../widgets/home_preview.dart';
 import '../../routes.dart';
 import '../../pages/warga_list_page.dart';
 import '../../pages/rumah_list_page.dart';
@@ -43,9 +42,7 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.arrow_downward,
       bg: const Color(0xFF43A047),
       onTap: () {
-        Navigator.pushNamed(
-          context, Routes.income,
-        );
+        Navigator.pushNamed(context, Routes.income);
       },
     ),
 
@@ -56,9 +53,7 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.arrow_upward,
       bg: const Color(0xFFE53935),
       onTap: () {
-        Navigator.pushNamed(
-          context, Routes.expenses,
-        );
+        Navigator.pushNamed(context, Routes.expenses);
       },
     ),
 
@@ -134,9 +129,7 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.bar_chart,
       bg: const Color(0xFF2E6BFF),
       onTap: () {
-        Navigator.pushNamed(
-          context, Routes.report,
-        );
+        Navigator.pushNamed(context, Routes.report);
       },
     ),
 
@@ -521,10 +514,8 @@ class _HomePageState extends State<HomePage> {
                 title: const Text('Laporan'),
                 subtitle: const Text('Ekspor laporan keuangan'),
                 trailing: const Icon(Icons.chevron_right),
-                onTap: (){
-                  Navigator.pushNamed(
-                    context, Routes.report,
-                  );
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.report);
                 },
               ),
             ),
