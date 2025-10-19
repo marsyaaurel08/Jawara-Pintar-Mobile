@@ -13,6 +13,7 @@ import '../../pages/warga_list_page.dart';
 import '../../pages/rumah_list_page.dart';
 import '../../pages/keluarga_list_page.dart';
 import 'user_management_page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
   @override
@@ -168,9 +169,7 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.manage_accounts_outlined,
       bg: const Color(0xFF0097A7),
       onTap: () {
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => const UserManagementPage()));
+        Navigator.pushNamed(context, Routes.pengguna);
       },
     ),
 
@@ -454,10 +453,9 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Keuangan',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w700),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
                 ),
               ),
             ),
