@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jawara_pintar_mobile/routes.dart';
 
 class Expense {
   final String id;
@@ -64,101 +65,6 @@ class _PengeluaranPageState extends State<PengeluaranPage> {
 
   String _formatDate(DateTime d) {
     return '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
-  }
-
-  void _openAddExpenseSheet() {
-    final titleCtl = TextEditingController();
-    final amountCtl = TextEditingController();
-    DateTime selectedDate = DateTime.now();
-
-    // date picker handled inline inside the sheet using setModalState
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.only(
-          left: 16,
-          right: 16,
-          top: 16,
-          bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
-        ),
-        child: StatefulBuilder(builder: (ctx2, setModalState) {
-          return SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Tambah Pengeluaran', style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: titleCtl,
-                  decoration: const InputDecoration(labelText: 'Judul'),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: amountCtl,
-                  decoration: const InputDecoration(labelText: 'Jumlah (contoh: 15000)'),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(child: Text('Tanggal: ${selectedDate.toLocal().toString().split(' ')[0]}')),
-                    TextButton(
-                      onPressed: () async {
-                        final picked = await showDatePicker(
-                          context: context,
-                          initialDate: selectedDate,
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                        );
-                        if (picked != null) {
-                          setModalState(() => selectedDate = picked);
-                        }
-                      },
-                      child: const Text('Pilih Tanggal'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          final title = titleCtl.text.trim();
-                          final amount = double.tryParse(amountCtl.text.replaceAll(',', '.')) ?? -1;
-                          if (title.isEmpty || amount <= 0) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Masukkan judul dan jumlah yang valid')),
-                            );
-                            return;
-                          }
-                          final newExpense = Expense(
-                            id: DateTime.now().millisecondsSinceEpoch.toString(),
-                            title: title,
-                            amount: amount,
-                            date: selectedDate,
-                          );
-                          setState(() => _expenses.insert(0, newExpense));
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Simpan'),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    OutlinedButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Batal'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        }),
-      ),
-    );
   }
 
   void _deleteExpense(String id) {
@@ -257,7 +163,19 @@ class _PengeluaranPageState extends State<PengeluaranPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _openAddExpenseSheet,
+        onPressed: () async {
+          final result = await Navigator.of(context).pushNamed(Routes.addKeuangan, arguments: 1);
+          if (result is Map<String, dynamic> && result['type'] == 'expense') {
+            final data = result['data'] as Map<String, dynamic>;
+            final newExpense = Expense(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              title: data['title'] as String,
+              amount: (data['amount'] as num).toDouble(),
+              date: data['date'] as DateTime,
+            );
+            setState(() => _expenses.insert(0, newExpense));
+          }
+        },
         child: const Icon(Icons.add),
         tooltip: 'Tambah Pengeluaran',
       ),
