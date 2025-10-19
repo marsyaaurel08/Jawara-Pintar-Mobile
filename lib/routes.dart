@@ -29,7 +29,7 @@ class Routes {
   static const String activityLog = '/activity_log';
   static const String approvals = '/approvals';
   static const String mutations = '/mutations';
-  static const String iuran = '/iuran'; // Rute baru untuk halaman Iuran
+  static const String iuran = '/iuran';
 }
 
 final Map<String, WidgetBuilder> appRoutes = {
@@ -48,5 +48,5 @@ final Map<String, WidgetBuilder> appRoutes = {
   Routes.activityLog: (_) => const ActivityLogScreen(),
   Routes.approvals: (_) => const ResidentApprovalsScreen(),
   Routes.mutations: (_) => const FamilyMutationScreen(),
-  Routes.iuran: (_) => const IuranPage(), // Penambahan rute untuk halaman Iuran
+  Routes.iuran: (_) => const IuranPage(),
 };
