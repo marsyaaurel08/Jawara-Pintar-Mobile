@@ -6,6 +6,8 @@ import '../../widgets/feature_grid.dart';
 import '../../../widgets/bottom_nav_scaffold.dart';
 import 'analytics_page.dart';
 import 'search_page.dart';
+import '../../routes.dart';
+import '../../pages/warga_list_page.dart';
 // removed: import '../../widgets/home_preview.dart';
 
 class HomePage extends StatefulWidget {
@@ -63,10 +65,12 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.groups,
       bg: const Color(0xFF2E6BFF),
       onTap: () {
-        /* TODO: Navigator.pushNamed(context, Routes.residents); */
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => WargaListPage()),
+        );
       },
     ),
-
     // 6. Data Rumah
     FeatureItem(
       id: 'houses',
