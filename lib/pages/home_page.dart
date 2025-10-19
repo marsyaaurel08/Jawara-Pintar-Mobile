@@ -13,6 +13,7 @@ import '../../pages/warga_list_page.dart';
 import '../../pages/rumah_list_page.dart';
 import '../../pages/keluarga_list_page.dart';
 import 'user_management_page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
   @override
@@ -41,7 +42,11 @@ class _HomePageState extends State<HomePage> {
       title: 'Pemasukan',
       icon: Icons.arrow_downward,
       bg: const Color(0xFF43A047),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(
+          context, Routes.income,
+        );
+      },
     ),
 
     // 3. Pengeluaran
@@ -50,7 +55,11 @@ class _HomePageState extends State<HomePage> {
       title: 'Pengeluaran',
       icon: Icons.arrow_upward,
       bg: const Color(0xFFE53935),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(
+          context, Routes.expenses,
+        );
+      },
     ),
 
     // 4. Penerimaan (Penerimaan warga)
@@ -124,7 +133,11 @@ class _HomePageState extends State<HomePage> {
       title: 'Laporan Keuangan',
       icon: Icons.bar_chart,
       bg: const Color(0xFF2E6BFF),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(
+          context, Routes.report,
+        );
+      },
     ),
 
     // 11. Iuran (new placeholder)
@@ -168,9 +181,7 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.manage_accounts_outlined,
       bg: const Color(0xFF0097A7),
       onTap: () {
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => const UserManagementPage()));
+        Navigator.pushNamed(context, Routes.pengguna);
       },
     ),
 
@@ -454,10 +465,9 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Keuangan',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w700),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
                 ),
               ),
             ),
@@ -484,6 +494,9 @@ class _HomePageState extends State<HomePage> {
                 title: const Text('Pemasukan'),
                 subtitle: const Text('Rekap pemasukan'),
                 trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.income);
+                },
               ),
             ),
             const SizedBox(height: 8),
@@ -496,6 +509,9 @@ class _HomePageState extends State<HomePage> {
                 title: const Text('Pengeluaran'),
                 subtitle: const Text('Rekap pengeluaran'),
                 trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.expenses);
+                },
               ),
             ),
             const SizedBox(height: 8),
@@ -505,6 +521,11 @@ class _HomePageState extends State<HomePage> {
                 title: const Text('Laporan'),
                 subtitle: const Text('Ekspor laporan keuangan'),
                 trailing: const Icon(Icons.chevron_right),
+                onTap: (){
+                  Navigator.pushNamed(
+                    context, Routes.report,
+                  );
+                },
               ),
             ),
             const SizedBox(height: 24),

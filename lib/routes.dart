@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jawara_pintar_mobile/pages/keuangan/laporan.dart';
+import 'package:jawara_pintar_mobile/pages/keuangan/pemasukan.dart';
+import 'package:jawara_pintar_mobile/pages/keuangan/pengeluaran.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
 import 'pages/home_page.dart';
@@ -13,8 +16,11 @@ import 'pages/family_mutation_screen.dart';
 class Routes {
   static const login = '/login';
   static const register = '/register';
-  static const String home = '/home';
 
+  static const income = '/income';
+  static const expenses = '/expenses';
+  static const report = '/report';
+  static const String home = '/home';
   static const String kegiatan = '/kegiatan';
   static const String broadcast = '/broadcast';
   static const String aspirasi = '/aspirasi';
@@ -27,6 +33,11 @@ class Routes {
 final Map<String, WidgetBuilder> appRoutes = {
   Routes.login: (_) => const LoginPage(),
   Routes.register: (_) => const RegisterPage(),
+
+  '/home': (_) => const HomePage(),
+  '/income': (_) => const PemasukanPage(),
+  '/expenses': (_) => const PengeluaranPage(),
+  '/report': (_) => const LaporanPage(),
   Routes.home: (_) => const HomePage(),
   Routes.kegiatan: (_) => const KegiatanPage(),
   Routes.broadcast: (_) => const BroadcastPage(),
