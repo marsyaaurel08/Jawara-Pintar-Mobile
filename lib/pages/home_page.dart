@@ -8,6 +8,8 @@ import 'analytics_page.dart';
 import 'search_page.dart';
 import '../../routes.dart';
 import '../../pages/warga_list_page.dart';
+import '../../pages/rumah_list_page.dart';
+import '../../pages/keluarga_list_page.dart';
 // removed: import '../../widgets/home_preview.dart';
 
 class HomePage extends StatefulWidget {
@@ -77,7 +79,12 @@ class _HomePageState extends State<HomePage> {
       title: 'Data Rumah',
       icon: Icons.home_work_outlined,
       bg: const Color(0xFF00BFA6),
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RumahListPage()),
+        );
+      },
     ),
 
     // 7. Kegiatan
@@ -140,7 +147,12 @@ class _HomePageState extends State<HomePage> {
       title: 'Keluarga',
       icon: Icons.family_restroom,
       bg: const Color(0xFFFFA726),
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => KeluargaListPage()),
+        );
+      },
     ),
 
     // 14. Pengguna
