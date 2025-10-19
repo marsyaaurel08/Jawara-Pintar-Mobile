@@ -12,9 +12,9 @@ class EditWargaPage extends StatefulWidget {
 class _EditWargaPageState extends State<EditWargaPage> {
   final _formKey = GlobalKey<FormState>();
 
-  // Warna kustom Deep Purple untuk konsistensi
-  static const Color _primaryColor = Colors.deepPurple;
-  static const Color _accentColor = Colors.deepPurpleAccent;
+   // Warna kustom 
+  static const Color _primaryColor = Color(0xFF2E6BFF);
+  static const Color _accentColor = Color.fromARGB(255, 30, 76, 182);
 
   // State variables, initialized in initState
   String? _nama;

@@ -11,7 +11,7 @@ class WargaListPage extends StatefulWidget {
 
 class _WargaListPageState extends State<WargaListPage> {
   // Warna kustom Deep Purple untuk konsistensi
-  static const Color _primaryColor = Colors.deepPurple;
+  static const Color _primaryColor = Color(0xFF2E6BFF);
 
   // --- Data Warga DILENGKAPI dengan detail Tambahan ---
   final List<Map<String, dynamic>> _allWargaList = [

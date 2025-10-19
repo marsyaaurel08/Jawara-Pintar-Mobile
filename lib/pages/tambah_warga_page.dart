@@ -33,9 +33,9 @@ class _TambahWargaPageState extends State<TambahWargaPage> {
   final List<String> _listPekerjaan = ['PNS', 'Wiraswasta', 'Pelajar'];
   final List<String> _listStatus = ['Aktif', 'Tidak Aktif'];
 
-  // Warna kustom diubah menjadi Deep Purple
-  static const Color _primaryColor = Colors.deepPurple;
-  static const Color _accentColor = Colors.deepPurpleAccent;
+  // Warna kustom 
+  static const Color _primaryColor = Color(0xFF2E6BFF);
+  static const Color _accentColor = Color.fromARGB(255, 30, 76, 182);
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
