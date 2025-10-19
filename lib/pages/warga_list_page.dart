@@ -1,6 +1,8 @@
+// file: lib/warga_list_page.dart (Mengacu pada konteks Anda, ini adalah WargaListPage)
 import 'package:flutter/material.dart';
 import '../pages/tambah_warga_page.dart';
 import '../pages/edit_warga_page.dart';
+import '../pages/detail_warga_page.dart';
 
 class WargaListPage extends StatefulWidget {
   const WargaListPage({Key? key}) : super(key: key);
@@ -12,6 +14,8 @@ class WargaListPage extends StatefulWidget {
 class _WargaListPageState extends State<WargaListPage> {
   // Warna kustom Deep Purple untuk konsistensi
   static const Color _primaryColor = Color(0xFF2E6BFF);
+  static const Color _accentColor = Color(0xFF00C853); // Hijau untuk status Aktif/Hidup
+  static const Color _warningColor = Color(0xFFFF9800); // Orange untuk Nonaktif/Istri/Anak
 
   // --- Data Warga DILENGKAPI dengan detail Tambahan ---
   final List<Map<String, dynamic>> _allWargaList = [
@@ -81,19 +85,19 @@ class _WargaListPageState extends State<WargaListPage> {
     },
   ];
 
-  // --- State Variables for Search and Filter (TIDAK BERUBAH) ---
+  // --- State Variables for Search and Filter ---
   String _searchQuery = '';
   String? _selectedJenisKelamin;
   String? _selectedStatus; // This is the filter for 'status'
   String? _selectedKeluarga;
 
-  // --- Filter Options (for the Dialog) (TIDAK BERUBAH) ---
+  // --- Filter Options (for the Dialog) ---
   final List<String> _jenisKelaminOptions = ['Laki-laki', 'Perempuan'];
   final List<String> _statusOptions = ['Hidup', 'Meninggal']; // Options for status filter
   List<String> get _keluargaOptions =>
       _allWargaList.map((warga) => warga['keluarga'] as String).toSet().toList();
 
-  // --- Computed List for Display (with search and all filters) (TIDAK BERUBAH) ---
+  // --- Computed List for Display (with search and all filters) ---
   List<Map<String, dynamic>> get _filteredWargaList {
     return _allWargaList.where((warga) {
       final matchesSearch = warga['nama']
@@ -111,92 +115,19 @@ class _WargaListPageState extends State<WargaListPage> {
   }
 
   // --------------------------------------------------------------------------
-  // --- FUNCTION: Show Detail Dialog (TIDAK BERUBAH) ---
+  // --- FUNCTION: Navigate to Detail Page (Updated to use DetailWargaPage) ---
   // --------------------------------------------------------------------------
-  void _showDetailDialog(BuildContext context, Map<String, dynamic> warga) {
-    String formatTanggalLahir(String? tgl) {
-      if (tgl == null) return "N/A";
-      try {
-        final date = DateTime.parse(tgl);
-        return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
-      } catch (e) {
-        return tgl;
-      }
-    }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          title: Text(
-            "Detail Warga",
-            style: const TextStyle(fontWeight: FontWeight.bold, color: _primaryColor),
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildDetailRow("Nama", warga['nama']),
-                _buildDetailRow("Keluarga", warga['keluarga']),
-                const Divider(height: 16),
-                _buildDetailRow("NIK", warga['nik']),
-                _buildDetailRow("Tempat, Tgl. Lahir",
-                    "${warga['tempatLahir'] ?? 'N/A'}, ${formatTanggalLahir(warga['tanggalLahir'])}"),
-                _buildDetailRow("Jenis Kelamin", warga['jenisKelamin'] ?? 'N/A'),
-                _buildDetailRow("Golongan Darah", warga['golonganDarah'] ?? 'N/A'),
-                _buildDetailRow("Agama", warga['agama'] ?? 'N/A'),
-                _buildDetailRow("Peran Keluarga", warga['peranKeluarga'] ?? 'N/A'),
-                const Divider(height: 16),
-                _buildDetailRow("Pendidikan", warga['pendidikan'] ?? 'N/A'),
-                _buildDetailRow("Pekerjaan", warga['pekerjaan'] ?? 'N/A'),
-                _buildDetailRow("Telepon", warga['telepon'] ?? 'N/A'),
-                const Divider(height: 16),
-                _buildDetailRow("Status Domisili", warga['domisili'] ?? 'N/A',
-                    color: warga['domisili'] == 'Aktif' ? Colors.blue.shade800 : Colors.red.shade800),
-                _buildDetailRow("Status Kehidupan", warga['status'] ?? 'N/A',
-                    color: warga['status'] == 'Hidup' ? Colors.green.shade800 : Colors.black87),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('TUTUP', style: TextStyle(color: _primaryColor)),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // Helper function to build a detailed row in the dialog
-  Widget _buildDetailRow(String label, String value,
-      {Color color = Colors.black87}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 140, // Lebar label diperlebar
-            child: Text("$label:",
-                style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.grey)),
-          ),
-          Expanded(
-            child: Text(value,
-                style: TextStyle(color: color, fontWeight: FontWeight.bold)),
-          ),
-        ],
+  void _showDetailWarga(BuildContext context, Map<String, dynamic> wargaData) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailWargaPage(wargaData: wargaData),
       ),
     );
   }
 
   // --------------------------------------------------------------------------
-  // --- FUNCTION: Navigate to Edit Page (TIDAK BERUBAH) ---
+  // --- FUNCTION: Navigate to Edit Page ---
   // --------------------------------------------------------------------------
   void _navigateToEditPage(BuildContext context, Map<String, dynamic> warga) {
     Navigator.push(
@@ -220,8 +151,8 @@ class _WargaListPageState extends State<WargaListPage> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: const Text('Filter Data Warga', style: TextStyle(color: _primaryColor, fontWeight: FontWeight.bold)),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              title: const Text('Filter Data Warga', style: TextStyle(color: _primaryColor, fontWeight: FontWeight.bold, fontSize: 17)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -229,11 +160,11 @@ class _WargaListPageState extends State<WargaListPage> {
                     _buildFilterDropdown(
                         setDialogState, 'Jenis Kelamin', tempJenisKelamin, _jenisKelaminOptions,
                         (newValue) => tempJenisKelamin = newValue),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     _buildFilterDropdown(
                         setDialogState, 'Status Kehidupan', tempStatus, _statusOptions,
                         (newValue) => tempStatus = newValue),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     _buildFilterDropdown(
                         setDialogState, 'Keluarga', tempKeluarga, _keluargaOptions,
                         (newValue) => tempKeluarga = newValue),
@@ -249,12 +180,13 @@ class _WargaListPageState extends State<WargaListPage> {
                       tempKeluarga = null;
                     });
                   },
-                  child: const Text('Reset', style: TextStyle(color: Colors.grey)),
+                  child: const Text('Reset', style: TextStyle(color: Colors.grey, fontSize: 14)),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primaryColor,
                     foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   ),
                   onPressed: () {
                     setState(() {
@@ -264,7 +196,7 @@ class _WargaListPageState extends State<WargaListPage> {
                     });
                     Navigator.of(context).pop();
                   },
-                  child: const Text('TERAPKAN FILTER'),
+                  child: const Text('TERAPKAN FILTER', style: TextStyle(fontSize: 14)),
                 ),
               ],
             );
@@ -283,18 +215,19 @@ class _WargaListPageState extends State<WargaListPage> {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: _primaryColor),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        labelStyle: const TextStyle(color: _primaryColor, fontSize: 14),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         focusedBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
           borderSide: BorderSide(color: _primaryColor, width: 2.0),
         ),
       ),
       value: currentValue,
-      hint: Text('-- Pilih $label --'),
+      hint: Text('-- Pilih $label --', style: const TextStyle(fontSize: 14)),
       isExpanded: true,
       items: items
-          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+          .map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(fontSize: 14))))
           .toList(),
       onChanged: (String? newValue) {
         setDialogState(() {
@@ -304,6 +237,26 @@ class _WargaListPageState extends State<WargaListPage> {
     );
   }
   // --------------------------------------------------------------------------
+
+  // --- Widget pembantu untuk Badge Status ---
+  Widget _buildStatusBadge(String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color, width: 0.8),
+      ),
+      child: Text(
+        label.toUpperCase(),
+        style: TextStyle(
+          color: color,
+          fontWeight: FontWeight.bold,
+          fontSize: 10,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -316,13 +269,13 @@ class _WargaListPageState extends State<WargaListPage> {
         backgroundColor: _primaryColor,
         foregroundColor: Colors.white,
         elevation: 4,
-        title: const Text('Data Warga', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Data Warga', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
       ),
       body: Column(
         children: [
-          // Search Bar and Filter Button (TIDAK BERUBAH)
+          // Search Bar and Filter Button
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(10.0),
             child: Row(
               children: [
                 Expanded(
@@ -334,15 +287,16 @@ class _WargaListPageState extends State<WargaListPage> {
                     },
                     decoration: InputDecoration(
                       hintText: 'Cari nama atau NIK...',
-                      prefixIcon: const Icon(Icons.search, color: _primaryColor),
+                      hintStyle: const TextStyle(fontSize: 14),
+                      prefixIcon: const Icon(Icons.search, color: _primaryColor, size: 20),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
                       fillColor: _primaryColor.withOpacity(0.05),
                       contentPadding:
-                          const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15),
+                          const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
                     ),
                   ),
                 ),
@@ -352,12 +306,13 @@ class _WargaListPageState extends State<WargaListPage> {
                     color: isFilterActive
                         ? _primaryColor
                         : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: IconButton(
                     icon: Icon(
                       Icons.filter_list,
                       color: isFilterActive ? Colors.white : Colors.black87,
+                      size: 20,
                     ),
                     onPressed: () => _showFilterDialog(context),
                     tooltip: 'Filter Data',
@@ -367,15 +322,15 @@ class _WargaListPageState extends State<WargaListPage> {
             ),
           ),
 
-          // Filter Reset Chip (TIDAK BERUBAH)
+          // Filter Reset Chip
           if (isFilterActive)
             Padding(
-              padding: const EdgeInsets.only(left: 12.0, bottom: 8.0),
+              padding: const EdgeInsets.only(left: 10.0, bottom: 6.0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: ActionChip(
-                  avatar: const Icon(Icons.close, color: _primaryColor, size: 18),
-                  label: const Text('Hapus Filter', style: TextStyle(color: _primaryColor)),
+                  avatar: const Icon(Icons.close, color: _primaryColor, size: 16),
+                  label: const Text('Hapus Filter', style: TextStyle(color: _primaryColor, fontSize: 13)),
                   onPressed: () {
                     setState(() {
                       _selectedJenisKelamin = null;
@@ -385,122 +340,119 @@ class _WargaListPageState extends State<WargaListPage> {
                   },
                   backgroundColor: _primaryColor.withOpacity(0.1),
                   side: const BorderSide(color: _primaryColor),
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 ),
               ),
             ),
 
-          // Warga List
+          // Warga List (NEW EPIC CARD DESIGN)
           Expanded(
             child: _filteredWargaList.isEmpty
                 ? const Center(
-                    child: Text(
-                      'Tidak ada data warga yang cocok dengan kriteria.',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                      textAlign: TextAlign.center,
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        'Tidak ada data warga yang cocok dengan kriteria.',
+                        style: TextStyle(fontSize: 15, color: Colors.grey),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   )
                 : ListView.builder(
                     itemCount: _filteredWargaList.length,
                     itemBuilder: (context, index) {
                       final warga = _filteredWargaList[index];
-                      final statusColor = warga['status'] == 'Hidup'
-                          ? Colors.green.shade700
-                          : Colors.red.shade700;
+                      final statusIsHidup = warga['status'] == 'Hidup';
+                      final domisiliIsAktif = warga['domisili'] == 'Aktif';
+
+                      final statusColor = statusIsHidup ? _accentColor : Colors.red.shade700;
+                      final domisiliColor = domisiliIsAktif ? Colors.blue.shade700 : _warningColor;
                       
                       final genderIcon = warga['jenisKelamin'] == 'Laki-laki' 
                           ? Icons.male 
                           : Icons.female;
-                      
-                      // --- LOGIC BARU UNTUK DOMISILI ---
-                      final isDomisiliAktif = warga['domisili'] == 'Aktif';
-                      final domisiliColor = isDomisiliAktif 
-                          ? Colors.blue.shade700
-                          : Colors.orange.shade700;
-                      // ---------------------------------
 
                       return Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        elevation: 4, 
+                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        elevation: 5, // Tingkatkan elevasi
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(color: Colors.grey.shade200, width: 1),
+                          borderRadius: BorderRadius.circular(15), // Tingkatkan radius
                         ),
                         child: InkWell(
-                          onTap: () => _showDetailDialog(context, warga), // Show Detail on tap
-                          borderRadius: BorderRadius.circular(12),
+                          // OnTap sekarang menuju DetailWargaPage
+                          onTap: () => _showDetailWarga(context, warga), 
+                          borderRadius: BorderRadius.circular(15),
                           child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                // Ikon Warga
-                                CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: _primaryColor.withOpacity(0.1),
-                                  child: Icon(genderIcon, color: _primaryColor, size: 30),
-                                ),
-                                const SizedBox(width: 15),
+                            padding: const EdgeInsets.symmetric(vertical: 10.0), // Padding vertikal
+                            child: ListTile(
+                              // --- LEADING: Ikon Warga ---
+                              leading: CircleAvatar(
+                                radius: 24, 
+                                backgroundColor: _primaryColor.withOpacity(0.1),
+                                child: Icon(genderIcon, color: _primaryColor, size: 28),
+                              ),
 
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                              // --- TITLE: Nama Lengkap ---
+                              title: Text(
+                                warga['nama'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w900, // Tebal sekali
+                                  fontSize: 16, 
+                                  color: Colors.black87,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+
+                              // --- SUBTITLE: Detail Info Bawah ---
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 4),
+                                  // NIK & Keluarga
+                                  Row(
                                     children: [
-                                      // 1. Nama (Judul Utama)
-                                      Text(
-                                        warga['nama'],
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 18,
-                                          color: _primaryColor,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      // 2. NIK (Sebagai subtitle)
+                                      const Icon(Icons.credit_card, size: 14, color: Colors.grey),
+                                      const SizedBox(width: 5),
                                       Text(
                                         "NIK: ${warga['nik']}",
-                                        style: const TextStyle(color: Colors.black87, fontSize: 13),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      // 3. Status Domisili (BARU) dan Status Kehidupan
-                                      Row(
-                                        children: [
-                                          // Status Domisili (menggunakan Ikon Rumah)
-                                          Icon(Icons.home, size: 16, color: domisiliColor),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            isDomisiliAktif ? 'Aktif' : 'Nonaktif',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13,
-                                              color: domisiliColor,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 12),
-                                          // Status Kehidupan
-                                          Icon(Icons.circle, size: 8, color: statusColor),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            warga['status'],
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13,
-                                              color: statusColor,
-                                            ),
-                                          ),
-                                        ],
+                                        style: const TextStyle(color: Colors.black54, fontSize: 12),
                                       ),
                                     ],
                                   ),
-                                ),
-                                
-                                // 4. Action (Edit Button)
-                                IconButton(
-                                  icon: const Icon(Icons.edit, color: _primaryColor),
-                                  onPressed: () => _navigateToEditPage(context, warga), // Navigate to edit
-                                  tooltip: 'Edit Data Warga',
-                                ),
-                              ],
+                                  const SizedBox(height: 2),
+                                  // Keluarga & Peran
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.groups, size: 14, color: Colors.grey),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: Text(
+                                          "${warga['keluarga']} (${warga['peranKeluarga']})",
+                                          style: const TextStyle(color: Colors.black54, fontSize: 12),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+
+                                  // Status Badges
+                                  Row(
+                                    children: [
+                                      _buildStatusBadge(warga['domisili'], domisiliColor),
+                                      const SizedBox(width: 8),
+                                      _buildStatusBadge(warga['status'], statusColor),
+                                    ],
+                                  ),
+                                ],
+                              ),
+
+                              // --- TRAILING: Tombol Aksi (Edit) ---
+                              trailing: IconButton(
+                                icon: const Icon(Icons.edit_note, color: _primaryColor, size: 28), 
+                                onPressed: () => _navigateToEditPage(context, warga), 
+                                tooltip: 'Edit Data Warga',
+                              ),
                             ),
                           ),
                         ),
@@ -520,7 +472,7 @@ class _WargaListPageState extends State<WargaListPage> {
         backgroundColor: _primaryColor,
         foregroundColor: Colors.white,
         tooltip: 'Tambah Warga',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, size: 28),
       ),
     );
   }
