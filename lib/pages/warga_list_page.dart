@@ -285,6 +285,7 @@ class _WargaListPageState extends State<WargaListPage> {
                         _searchQuery = value;
                       });
                     },
+                    style: const TextStyle(fontSize: 14.0),
                     decoration: InputDecoration(
                       hintText: 'Cari nama atau NIK...',
                       hintStyle: const TextStyle(fontSize: 14),
@@ -301,6 +302,7 @@ class _WargaListPageState extends State<WargaListPage> {
                   ),
                 ),
                 const SizedBox(width: 8),
+                // Button Filter
                 Container(
                   decoration: BoxDecoration(
                     color: isFilterActive
@@ -368,39 +370,44 @@ class _WargaListPageState extends State<WargaListPage> {
                       final statusColor = statusIsHidup ? _accentColor : Colors.red.shade700;
                       final domisiliColor = domisiliIsAktif ? Colors.blue.shade700 : _warningColor;
                       
-                      final genderIcon = warga['jenisKelamin'] == 'Laki-laki' 
-                          ? Icons.male 
-                          : Icons.female;
+                      // Ikon ini yang Dihapus/Diganti:
+                      // final genderIcon = warga['jenisKelamin'] == 'Laki-laki' 
+                      //     ? Icons.male 
+                      //     : Icons.female;
 
                       return Card(
                         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        elevation: 5, // Tingkatkan elevasi
+                        elevation: 5,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15), // Tingkatkan radius
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         child: InkWell(
-                          // OnTap sekarang menuju DetailWargaPage
                           onTap: () => _showDetailWarga(context, warga), 
                           borderRadius: BorderRadius.circular(15),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0), // Padding vertikal
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: ListTile(
-                              // --- LEADING: Ikon Warga ---
+                              // --- LEADING: Ikon Profil/Avatar Generik ---
                               leading: CircleAvatar(
                                 radius: 24, 
                                 backgroundColor: _primaryColor.withOpacity(0.1),
-                                child: Icon(genderIcon, color: _primaryColor, size: 28),
+                                child: const Icon(
+                                    Icons.person_pin, // Mengganti ikon gender dengan ikon profile
+                                    color: _primaryColor, 
+                                    size: 32 // Dibuat sedikit lebih besar agar menonjol
+                                ),
                               ),
 
                               // --- TITLE: Nama Lengkap ---
                               title: Text(
                                 warga['nama'],
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.w900, // Tebal sekali
+                                  fontWeight: FontWeight.w900,
                                   fontSize: 16, 
                                   color: Colors.black87,
                                 ),
                                 overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
                               ),
 
                               // --- SUBTITLE: Detail Info Bawah ---
