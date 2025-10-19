@@ -6,13 +6,13 @@ import '../../widgets/feature_grid.dart';
 import '../../../widgets/bottom_nav_scaffold.dart';
 import 'analytics_page.dart';
 import 'search_page.dart';
+import '../routes.dart';
+// removed: import '../../widgets/home_preview.dart';
 import '../../routes.dart';
 import '../../pages/warga_list_page.dart';
 import '../../pages/rumah_list_page.dart';
 import '../../pages/keluarga_list_page.dart';
 import 'user_management_page.dart';
-
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
   @override
@@ -59,7 +59,9 @@ class _HomePageState extends State<HomePage> {
       title: 'Penerimaan',
       icon: Icons.verified_user_outlined,
       bg: const Color(0xFF7E57C2),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, Routes.approvals);
+      },
     ),
 
     // 5. Data Warga
@@ -140,7 +142,9 @@ class _HomePageState extends State<HomePage> {
       title: 'Mutasi',
       icon: Icons.shuffle_on_outlined,
       bg: const Color(0xFF78909C),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, Routes.mutations);
+      },
     ),
 
     // 13. Keluarga
@@ -185,7 +189,9 @@ class _HomePageState extends State<HomePage> {
       title: 'Log aktivitas',
       icon: Icons.history,
       bg: const Color(0xFF78909C),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, Routes.activityLog);
+      },
     ),
   ];
 
