@@ -1,138 +1,240 @@
 import 'package:flutter/material.dart';
 
-class AspirasiPage extends StatelessWidget {
+class AspirasiPage extends StatefulWidget {
   const AspirasiPage({super.key});
 
-  Widget _buildStatusChip(String status) {
-    Color color;
-    String label;
-    switch (status) {
-      case 'Diterima':
-        color = Colors.blue;
-        label = 'Diterima';
-        break;
-      case 'Diproses':
-        color = Colors.orange;
-        label = 'Diproses';
-        break;
-      case 'Selesai':
-        color = Colors.green;
-        label = 'Selesai';
-        break;
-      default:
-        color = Colors.grey;
-        label = 'Baru';
-    }
-    return Chip(
-      label: Text(label, style: const TextStyle(color: Colors.white, fontSize: 12)),
-      backgroundColor: color,
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+  @override
+  State<AspirasiPage> createState() => _AspirasiPageState();
+}
+
+class _AspirasiPageState extends State<AspirasiPage> {
+  // Data dummy untuk contoh
+  final List<Map<String, dynamic>> _kegiatanData = [
+    {
+      'id': 1,
+      'pengirim': 'John Doe',
+      'judul': 'Rapat Koordinasi Bulanan',
+      'status': 'Selesai',
+      'tanggal': '2024-01-15',
+      'deskripsi': 'Rapat koordinasi untuk membahas progress bulanan'
+    },
+    {
+      'id': 2,
+      'pengirim': 'Jane Smith',
+      'judul': 'Pelatihan Flutter',
+      'status': 'Berlangsung',
+      'tanggal': '2024-01-20',
+      'deskripsi': 'Pelatihan pengembangan aplikasi mobile dengan Flutter'
+    },
+    {
+      'id': 3,
+      'pengirim': 'Bob Johnson',
+      'judul': 'Webinar Digital Marketing',
+      'status': 'Akan Datang',
+      'tanggal': '2024-02-01',
+      'deskripsi': 'Webinar tentang strategi digital marketing terbaru'
+    },
+  ];
+
+  void _showDetailDialog(Map<String, dynamic> kegiatan) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(kegiatan['judul']),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildDetailRow('Pengirim', kegiatan['pengirim']),
+                _buildDetailRow('Status', kegiatan['status']),
+                _buildDetailRow('Tanggal Dibuat', kegiatan['tanggal']),
+                _buildDetailRow('Deskripsi', kegiatan['deskripsi']),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('TUTUP'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$label: ',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Expanded(
+            child: Text(value),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _editKegiatan(Map<String, dynamic> kegiatan) {
+    // Implementasi edit kegiatan
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Edit kegiatan: ${kegiatan['judul']}'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _deleteKegiatan(int id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Hapus Kegiatan'),
+          content: const Text('Apakah Anda yakin ingin menghapus kegiatan ini?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('BATAL'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _kegiatanData.removeWhere((item) => item['id'] == id);
+                });
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Kegiatan berhasil dihapus'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
+              child: const Text('HAPUS', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Data dummy untuk tabel
-    final List<Map<String, String>> dataAspirasi = [
-      {
-        "no": "1",
-        "pengirim": "Warga Anonim",
-        "judul": "Lampu jalan di RT 05 mati",
-        "status": "Diproses",
-        "tanggal": "18-10-2025"
-      },
-      {
-        "no": "2",
-        "pengirim": "Bpk. Budi",
-        "judul": "Usulan perbaikan jalan",
-        "status": "Diterima",
-        "tanggal": "17-10-2025"
-      },
-      {
-        "no": "3",
-        "pengirim": "Ibu Siti",
-        "judul": "Masalah sampah di depan gang",
-        "status": "Selesai",
-        "tanggal": "10-10-2025"
-      },
-    ];
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manajemen Aspirasi'),
-        backgroundColor: const Color(0xFF8D6E63), // Sesuaikan warna
+        title: const Text('Daftar Kegiatan'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ====== HEADER & TOMBOL AKSI ======
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Daftar Aspirasi Warga',
-                  style: Theme.of(context).textTheme.titleLarge,
+            // Header informasi
+            Card(
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.blue.shade700),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Tabel menampilkan judul dan aksi. Klik detail untuk informasi lengkap.',
+                        style: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                IconButton(
-                  icon: const Icon(Icons.filter_list),
-                  tooltip: 'Filter',
-                  onPressed: () {
-                    // TODO: Logika untuk filter
-                  },
-                ),
-              ],
+              ),
             ),
             const SizedBox(height: 16),
-
-            // ====== TABEL DATA ======
-            SizedBox(
-              width: double.infinity,
+            
+            // Tabel kegiatan
+            Expanded(
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columnSpacing: 20,
+                child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  columns: const [
-                    DataColumn(label: Text('No')),
-                    DataColumn(label: Text('Pengirim')),
-                    DataColumn(label: Text('Judul')),
-                    DataColumn(label: Text('Status')),
-                    DataColumn(label: Text('Tanggal')),
-                    DataColumn(label: Text('Aksi')),
-                  ],
-                  rows: dataAspirasi.map((item) {
-                    return DataRow(cells: [
-                      DataCell(Text(item['no']!)),
-                      DataCell(Text(item['pengirim']!)),
-                      DataCell(SizedBox(width: 150, child: Text(item['judul']!, overflow: TextOverflow.ellipsis))),
-                      DataCell(_buildStatusChip(item['status']!)),
-                      DataCell(Text(item['tanggal']!)),
-                      DataCell(Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.visibility, size: 20),
-                            tooltip: 'Detail',
-                            onPressed: () {},
+                  child: DataTable(
+                    headingRowColor: MaterialStateProperty.resolveWith<Color?>(
+                      (Set<MaterialState> states) => Colors.grey.shade100,
+                    ),
+                    columns: const [
+                      DataColumn(
+                        label: Text(
+                          'No',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Judul Kegiatan',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Aksi',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                    rows: _kegiatanData.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final kegiatan = entry.value;
+                      
+                      return DataRow(
+                        cells: [
+                          DataCell(Text('${index + 1}')),
+                          DataCell(
+                            Text(
+                              kegiatan['judul'],
+                              style: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.edit, size: 20, color: Colors.blue),
-                            tooltip: 'Ubah Status',
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, size: 20, color: Colors.red),
-                            tooltip: 'Hapus',
-                            onPressed: () {},
+                          DataCell(
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.remove_red_eye, size: 18),
+                                  color: Colors.blue,
+                                  onPressed: () => _showDetailDialog(kegiatan),
+                                  tooltip: 'Detail',
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.edit, size: 18),
+                                  color: Colors.orange,
+                                  onPressed: () => _editKegiatan(kegiatan),
+                                  tooltip: 'Edit',
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete, size: 18),
+                                  color: Colors.red,
+                                  onPressed: () => _deleteKegiatan(kegiatan['id']),
+                                  tooltip: 'Hapus',
+                                ),
+                              ],
+                            ),
                           ),
                         ],
-                      )),
-                    ]);
-                  }).toList(),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
             ),

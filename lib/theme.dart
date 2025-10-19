@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const kPrimaryBlue = Color(0xFF2E6BFF);
 const kBg = Color(0xFFF6F7FB);
@@ -8,6 +9,8 @@ ThemeData buildTheme() {
   return ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryBlue),
+    textTheme: GoogleFonts.poppinsTextTheme(),
+    primaryTextTheme: GoogleFonts.poppinsTextTheme(),
     scaffoldBackgroundColor: kBg,
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
