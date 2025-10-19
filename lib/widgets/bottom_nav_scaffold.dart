@@ -6,53 +6,75 @@ class BottomNavScaffold extends StatelessWidget {
   final Widget body;
 
   const BottomNavScaffold({
-    super.key,
+    Key? key,
     required this.currentIndex,
     required this.onTap,
     required this.body,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Use a clean white background for the nav and a subtle shadow
+    final bgColor = Colors.white;
+    final primary = const Color.fromARGB(
+      255,
+      5,
+      117,
+      209,
+    ); // Example primary color
+
     return Scaffold(
       body: body,
-      bottomNavigationBar: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-        child: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 8,
-          elevation: 8,
-          child: SizedBox(
-            height: 70,
-            child: Row(
-              children: [
-                _navItem(
-                  context,
-                  icon: Icons.dashboard,
-                  label: 'Beranda',
-                  index: 0,
-                ),
-                _navItem(
-                  context,
-                  icon: Icons.folder,
-                  label: 'Kependudukan',
-                  index: 1,
-                ),
-                // Expanded(child: Container()),
-                _navItem(
-                  context,
-                  icon: Icons.account_balance_wallet,
-                  label: 'Keuangan',
-                  index: 2,
-                ),
-                _navItem(
-                  context,
-                  icon: Icons.show_chart,
-                  label: 'Analitik',
-                  index: 3,
-                ),
-                // removed 'Akun' item as requested
-              ],
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: PhysicalModel(
+            color: Colors.transparent,
+            elevation: 2,
+            borderRadius: BorderRadius.circular(20),
+            shadowColor: Colors.black12,
+            child: Container(
+              height: 78,
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _flatNavItem(
+                    context,
+                    icon: Icons.home_outlined,
+                    label: 'Beranda',
+                    index: 0,
+                    activeColor: primary,
+                  ),
+                  _flatNavItem(
+                    context,
+                    icon: Icons.menu_book_outlined,
+                    label: 'Kependudukan',
+                    index: 1,
+                    activeColor: primary,
+                    labelWidth: 96,
+                  ),
+                  _flatNavItem(
+                    context,
+                    icon: Icons.schedule_outlined,
+                    label: 'Keuangan',
+                    index: 2,
+                    activeColor: primary,
+                  ),
+                  _flatNavItem(
+                    context,
+                    icon: Icons.event_outlined,
+                    label: 'Analitik',
+                    index: 3,
+                    activeColor: primary,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -60,43 +82,60 @@ class BottomNavScaffold extends StatelessWidget {
     );
   }
 
-  Widget _navItem(
+  // removed legacy _navItem to avoid unused declaration
+
+  Widget _flatNavItem(
     BuildContext context, {
     required IconData icon,
     required String label,
     required int index,
+    required Color activeColor,
+    double? labelWidth,
   }) {
     final active = index == currentIndex;
-    return Expanded(
-      child: InkWell(
-        onTap: () => onTap(index),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: active ? const Color(0xFFEAF0FF) : Colors.transparent,
-              ),
-              child: Icon(
-                icon,
-                color: active ? const Color(0xFF2E6BFF) : Colors.black45,
-                size: 20,
-              ),
+    final theme = Theme.of(context);
+    final inactiveColor =
+        theme.textTheme.bodySmall?.color?.withOpacity(0.75) ?? Colors.black54;
+
+    return GestureDetector(
+      onTap: () => onTap(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: EdgeInsets.all(active ? 8 : 6),
+            decoration: BoxDecoration(
+              color: active
+                  ? activeColor.withOpacity(0.08)
+                  : Colors.transparent,
+              shape: BoxShape.circle,
             ),
-            const SizedBox(height: 4),
-            Text(
+            child: Icon(
+              icon,
+              size: 22,
+              color: active ? activeColor : inactiveColor,
+            ),
+          ),
+          const SizedBox(height: 6),
+          SizedBox(
+            width: labelWidth ?? 72,
+            child: Text(
               label,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: 11,
+                fontSize: active ? 12 : 11,
                 fontWeight: active ? FontWeight.w700 : FontWeight.w500,
-                color: active ? const Color(0xFF2E6BFF) : Colors.black54,
+                color: active ? activeColor : inactiveColor,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+
+  // no additional helpers required
 }
