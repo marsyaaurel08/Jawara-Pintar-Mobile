@@ -5,7 +5,8 @@ import 'analytics_population_section.dart';
 import 'animated_entry.dart';
 
 class AnalyticsTabSwitcher extends StatefulWidget {
-  const AnalyticsTabSwitcher({super.key});
+  final int initialIndex;
+  const AnalyticsTabSwitcher({super.key, this.initialIndex = 0});
 
   @override
   State<AnalyticsTabSwitcher> createState() => _AnalyticsTabSwitcherState();
@@ -18,6 +19,7 @@ class _AnalyticsTabSwitcherState extends State<AnalyticsTabSwitcher>
   @override
   void initState() {
     super.initState();
+    index = widget.initialIndex;
   }
 
   @override
@@ -36,10 +38,10 @@ class _AnalyticsTabSwitcherState extends State<AnalyticsTabSwitcher>
       children: [
         // segmented control
         Container(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(1),
           decoration: BoxDecoration(
             color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -47,33 +49,46 @@ class _AnalyticsTabSwitcherState extends State<AnalyticsTabSwitcher>
               final accent = i == 0
                   ? const Color(0xFF2E6BFF)
                   : i == 1
-                      ? const Color(0xFF26A69A)
-                      : const Color(0xFF7E57C2);
+                  ? const Color(0xFF26A69A)
+                  : const Color(0xFF7E57C2);
               return Expanded(
                 child: GestureDetector(
                   onTap: () => _onSegmentChanged(i),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 250),
                     curve: Curves.easeInOut,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 11),
                     decoration: BoxDecoration(
                       color: i == index ? Colors.white : Colors.transparent,
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: i == index
                           ? [
                               BoxShadow(
-                                  color: accent.withOpacity(0.08),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2)),
+                                color: accent.withOpacity(0.08),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
                             ]
                           : null,
-                      border: Border(left: BorderSide(color: i == index ? accent : Colors.transparent, width: 4)),
+                      border: Border(
+                        left: BorderSide(
+                          color: i == index ? accent : Colors.transparent,
+                          width: 4,
+                        ),
+                      ),
                     ),
                     child: Center(
                       child: Text(
-                        i == 0 ? 'Keuangan' : i == 1 ? 'Kegiatan' : 'Kependudukan',
+                        i == 0
+                            ? 'Keuangan'
+                            : i == 1
+                            ? 'Kegiatan'
+                            : 'Kependudukan',
                         style: TextStyle(
-                          fontWeight: i == index ? FontWeight.w700 : FontWeight.w600,
+                          fontSize: 13,
+                          fontWeight: i == index
+                              ? FontWeight.w700
+                              : FontWeight.w600,
                           color: i == index ? accent : Colors.black87,
                         ),
                       ),
