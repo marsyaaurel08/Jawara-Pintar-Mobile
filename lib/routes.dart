@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jawara_pintar_mobile/pages/keuangan/laporan.dart';
 import 'package:jawara_pintar_mobile/pages/keuangan/pemasukan.dart';
 import 'package:jawara_pintar_mobile/pages/keuangan/pengeluaran.dart';
+import 'package:jawara_pintar_mobile/pages/keuangan/crud/addkeuangan.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
 import 'pages/home_page.dart';
@@ -28,6 +29,7 @@ class Routes {
   static const String activityLog = '/activity_log';
   static const String approvals = '/approvals';
   static const String mutations = '/mutations';
+  static const addKeuangan = '/add-keuangan';
 }
 
 final Map<String, WidgetBuilder> appRoutes = {
@@ -46,4 +48,10 @@ final Map<String, WidgetBuilder> appRoutes = {
   Routes.activityLog: (_) => const ActivityLogScreen(),
   Routes.approvals: (_) => const ResidentApprovalsScreen(),
   Routes.mutations: (_) => const FamilyMutationScreen(),
+  Routes.addKeuangan: (ctx) {
+    final arg = ModalRoute.of(ctx)?.settings.arguments;
+    int idx = 0;
+    if (arg is int) idx = arg;
+    return AddKeuanganPage(initialIndex: idx);
+  },
 };

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jawara_pintar_mobile/routes.dart';
 
 class Income {
   String title;
@@ -278,7 +279,20 @@ final List<Income> _incomes = [
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showForm(),
+        onPressed: () async {
+          final result = await Navigator.of(context).pushNamed(Routes.addKeuangan, arguments: 0);
+          if (result is Map<String, dynamic> && result['type'] == 'income') {
+            final data = result['data'] as Map<String, dynamic>;
+            final newIncome = Income(
+              title: data['title'] as String,
+              amount: (data['amount'] as num).toDouble(),
+              date: data['date'] as DateTime,
+              category: data['category'] as String? ?? '',
+              note: data['note'] as String? ?? '',
+            );
+            setState(() => _incomes.insert(0, newIncome));
+          }
+        },
         child: const Icon(Icons.add),
         tooltip: 'Tambah Pemasukan',
       ),
