@@ -6,6 +6,7 @@ import '../../widgets/feature_grid.dart';
 import '../../../widgets/bottom_nav_scaffold.dart';
 import 'analytics_page.dart';
 import 'search_page.dart';
+import '../routes.dart';
 // removed: import '../../widgets/home_preview.dart';
 
 class HomePage extends StatefulWidget {
@@ -53,7 +54,9 @@ class _HomePageState extends State<HomePage> {
       title: 'Penerimaan',
       icon: Icons.verified_user_outlined,
       bg: const Color(0xFF7E57C2),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, Routes.approvals);
+      },
     ),
 
     // 5. Data Warga
@@ -127,7 +130,9 @@ class _HomePageState extends State<HomePage> {
       title: 'Mutasi',
       icon: Icons.shuffle_on_outlined,
       bg: const Color(0xFF78909C),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, Routes.mutations);
+      },
     ),
 
     // 13. Keluarga
@@ -145,7 +150,9 @@ class _HomePageState extends State<HomePage> {
       title: 'Pengguna',
       icon: Icons.manage_accounts_outlined,
       bg: const Color(0xFF0097A7),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, '/manajemen_pengguna');
+      },
     ),
 
     // 15. Channel transfer (new placeholder)
@@ -163,7 +170,9 @@ class _HomePageState extends State<HomePage> {
       title: 'Log aktivitas',
       icon: Icons.history,
       bg: const Color(0xFF78909C),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, Routes.activityLog);
+      },
     ),
   ];
 
