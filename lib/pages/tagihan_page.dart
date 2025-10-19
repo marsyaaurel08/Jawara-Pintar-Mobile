@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 // Model data untuk item iuran (tagihan)
-class IuranItem {
+class TagihanItem {
   final int no;
   final String nama;
   final String noKeluarga;
@@ -13,7 +13,7 @@ class IuranItem {
   final double jumlah;
   final String periode;
 
-  IuranItem({
+  TagihanItem({
     required this.no,
     required this.nama,
     required this.noKeluarga,
@@ -25,17 +25,16 @@ class IuranItem {
   });
 }
 
-class IuranPage extends StatefulWidget {
-  const IuranPage({Key? key}) : super(key: key);
+class TagihanPage extends StatefulWidget {
+  const TagihanPage({Key? key}) : super(key: key);
 
   @override
-  State<IuranPage> createState() => _IuranPageState();
+  State<TagihanPage> createState() => _TagihanPageState();
 }
 
-class _IuranPageState extends State<IuranPage> {
-  // Data dummy yang meniru tampilan di gambar
-  final List<IuranItem> _iuranList = [
-    IuranItem(
+class _TagihanPageState extends State<TagihanPage> {
+  final List<TagihanItem> _iuranList = [
+    TagihanItem(
       no: 1,
       nama: 'Sukarno',
       noKeluarga: 'Aktif',
@@ -45,7 +44,7 @@ class _IuranPageState extends State<IuranPage> {
       jumlah: 10000,
       periode: '8 Oktober 2025',
     ),
-    IuranItem(
+    TagihanItem(
       no: 2,
       nama: 'Habibie',
       noKeluarga: 'Aktif',
@@ -55,7 +54,7 @@ class _IuranPageState extends State<IuranPage> {
       jumlah: 50000,
       periode: 'Oktober 2025',
     ),
-    IuranItem(
+    TagihanItem(
       no: 3,
       nama: 'Subroto',
       noKeluarga: 'Nonaktif',
@@ -106,7 +105,7 @@ class _IuranPageState extends State<IuranPage> {
   }
 
   // Widget untuk Item List Iuran
-  Widget _buildIuranItem(BuildContext context, IuranItem item, int index) {
+  Widget _buildIuranItem(BuildContext context, TagihanItem item, int index) {
     final isExpanded = _expandedIndex == index;
     final cardBgColor = Colors.grey.shade200;
 
@@ -293,7 +292,7 @@ class _IuranPageState extends State<IuranPage> {
 
                     const SizedBox(width: 8),
                     const Text(
-                      'Pemasukan', // Mengikuti label di gambar
+                      'Tagihan', 
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

@@ -1,7 +1,10 @@
+// file: lib/routes.dart
+
 import 'package:flutter/material.dart';
 import 'package:jawara_pintar_mobile/pages/keuangan/laporan.dart';
 import 'package:jawara_pintar_mobile/pages/keuangan/pemasukan.dart';
 import 'package:jawara_pintar_mobile/pages/keuangan/pengeluaran.dart';
+// Hapus import 'pages/iuran_page.dart' jika ada
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
 import 'pages/home_page.dart';
@@ -12,7 +15,7 @@ import 'pages/user_management_screen.dart';
 import 'pages/activity_log_screen.dart';
 import 'pages/resident_approvals_screen.dart';
 import 'pages/family_mutation_screen.dart';
-import 'pages/iuran_page.dart';
+import 'pages/tagihan_page.dart'; // <<< Import yang benar
 
 class Routes {
   static const login = '/login';
@@ -29,7 +32,7 @@ class Routes {
   static const String activityLog = '/activity_log';
   static const String approvals = '/approvals';
   static const String mutations = '/mutations';
-  static const String iuran = '/iuran';
+  static const String tagihan = '/tagihan';
 }
 
 final Map<String, WidgetBuilder> appRoutes = {
@@ -48,5 +51,5 @@ final Map<String, WidgetBuilder> appRoutes = {
   Routes.activityLog: (_) => const ActivityLogScreen(),
   Routes.approvals: (_) => const ResidentApprovalsScreen(),
   Routes.mutations: (_) => const FamilyMutationScreen(),
-  Routes.iuran: (_) => const IuranPage(),
+  Routes.tagihan: (_) => const TagihanPage(), // <<< Pastikan menggunakan TagihanPage()
 };

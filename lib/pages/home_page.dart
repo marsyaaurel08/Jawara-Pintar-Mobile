@@ -33,7 +33,9 @@ class _HomePageState extends State<HomePage> {
       title: 'Tagihan',
       icon: Icons.receipt_long,
       bg: const Color(0xFF5C6BC0),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, Routes.tagihan,);
+      },
     ),
 
     // 2. Pemasukan
@@ -43,9 +45,7 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.arrow_downward,
       bg: const Color(0xFF43A047),
       onTap: () {
-        Navigator.pushNamed(
-          context, Routes.income,
-        );
+        Navigator.pushNamed(context, Routes.income);
       },
     ),
 
@@ -56,9 +56,7 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.arrow_upward,
       bg: const Color(0xFFE53935),
       onTap: () {
-        Navigator.pushNamed(
-          context, Routes.expenses,
-        );
+        Navigator.pushNamed(context, Routes.expenses);
       },
     ),
 
@@ -134,9 +132,7 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.bar_chart,
       bg: const Color(0xFF2E6BFF),
       onTap: () {
-        Navigator.pushNamed(
-          context, Routes.report,
-        );
+        Navigator.pushNamed(context, Routes.report);
       },
     ),
 
@@ -146,12 +142,7 @@ class _HomePageState extends State<HomePage> {
       title: 'Iuran',
       icon: Icons.payments,
       bg: const Color(0xFF43A047),
-      onTap: () { 
-        Navigator.pushNamed(
-          context,
-          Routes.iuran, 
-        );
-      },
+      onTap: () {},
     ),
 
     // 12. Mutasi Keluarga
@@ -526,10 +517,8 @@ class _HomePageState extends State<HomePage> {
                 title: const Text('Laporan'),
                 subtitle: const Text('Ekspor laporan keuangan'),
                 trailing: const Icon(Icons.chevron_right),
-                onTap: (){
-                  Navigator.pushNamed(
-                    context, Routes.report,
-                  );
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.report);
                 },
               ),
             ),
