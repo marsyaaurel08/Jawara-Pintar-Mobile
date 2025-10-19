@@ -146,7 +146,12 @@ class _HomePageState extends State<HomePage> {
       title: 'Iuran',
       icon: Icons.payments,
       bg: const Color(0xFF43A047),
-      onTap: () {},
+      onTap: () { // <<< PERUBAHAN DI SINI
+        Navigator.pushNamed(
+          context,
+          Routes.iuran, // Menggunakan rute baru
+        );
+      },
     ),
 
     // 12. Mutasi Keluarga
