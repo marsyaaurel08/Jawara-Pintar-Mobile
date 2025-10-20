@@ -7,12 +7,11 @@ import '../../../widgets/bottom_nav_scaffold.dart';
 import 'analytics_page.dart';
 import 'search_page.dart';
 import 'profile_page.dart';
+import 'warga_list_page.dart';
+import 'rumah_list_page.dart';
+import 'keluarga_list_page.dart';
+import 'keuangan/laporan.dart';
 import '../routes.dart';
-import '../../routes.dart';
-import '../../pages/warga_list_page.dart';
-import '../../pages/rumah_list_page.dart';
-import '../../pages/keluarga_list_page.dart';
-import 'user_management_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,7 +33,7 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.receipt_long,
       bg: const Color(0xFF5C6BC0),
       onTap: () {
-        Navigator.pushNamed(context, Routes.tagihan,);
+        Navigator.pushNamed(context, Routes.tagihan);
       },
     ),
 
@@ -78,10 +77,11 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.groups,
       bg: const Color(0xFF2E6BFF),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => WargaListPage()),
-        );
+        // Arahkan ke navbar Kependudukan tab Warga
+        setState(() {
+          tab = 1;
+          dataIndex = 0;
+        });
       },
     ),
     // 6. Data Rumah
@@ -91,10 +91,11 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.home_work_outlined,
       bg: const Color(0xFF00BFA6),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => RumahListPage()),
-        );
+        // Arahkan ke navbar Kependudukan tab Rumah
+        setState(() {
+          tab = 1;
+          dataIndex = 1;
+        });
       },
     ),
 
@@ -132,7 +133,8 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.bar_chart,
       bg: const Color(0xFF2E6BFF),
       onTap: () {
-        Navigator.pushNamed(context, Routes.report);
+        // Arahkan ke navbar Keuangan (tab index 2)
+        setState(() => tab = 2);
       },
     ),
 
@@ -163,10 +165,11 @@ class _HomePageState extends State<HomePage> {
       icon: Icons.family_restroom,
       bg: const Color(0xFFFFA726),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => KeluargaListPage()),
-        );
+        // Arahkan ke navbar Kependudukan tab Keluarga
+        setState(() {
+          tab = 1;
+          dataIndex = 2;
+        });
       },
     ),
 
@@ -421,69 +424,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
 
-        // Content area - height adapts
-        AnimatedSize(
-          duration: const Duration(milliseconds: 220),
-          curve: Curves.easeInOut,
+        // Content area - tampilkan page dengan AppBar hidden
+        Expanded(
           child: IndexedStack(
             index: dataIndex,
             children: [
-              // Warga
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: const [
-                    Card(
-                      child: ListTile(
-                        leading: Icon(Icons.people, color: Color(0xFF2E6BFF)),
-                        title: Text('Daftar Warga'),
-                        subtitle: Text('Lihat, cari, dan kelola data warga'),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Center(child: Text('Daftar Warga (placeholder)')),
-                  ],
-                ),
-              ),
-
-              // Rumah
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: const [
-                    Card(
-                      child: ListTile(
-                        leading: Icon(Icons.home, color: Color(0xFF00BFA6)),
-                        title: Text('Daftar Rumah'),
-                        subtitle: Text('Rekap dan peta rumah'),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Center(child: Text('Daftar Rumah (placeholder)')),
-                  ],
-                ),
-              ),
-
-              // Keluarga
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: const [
-                    Card(
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.family_restroom,
-                          color: Color(0xFFFFA726),
-                        ),
-                        title: Text('Daftar Keluarga'),
-                        subtitle: Text('Informasi per KK dan mutasi'),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Center(child: Text('Daftar Keluarga (placeholder)')),
-                  ],
-                ),
-              ),
+              _hideAppBar(WargaListPage()),
+              _hideAppBar(RumahListPage()),
+              _hideAppBar(KeluargaListPage()),
             ],
           ),
         ),
@@ -491,126 +439,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildKeuangan() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // AppBar untuk Keuangan dengan icon seperti Analitik
-          Container(
-            height: 80,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  const Color.fromARGB(255, 5, 117, 209),
-                  const Color.fromARGB(255, 3, 95, 170),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Icon(
-                            Icons.account_balance_wallet_outlined,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          'Keuangan',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+  // Helper method untuk hide AppBar dari page
+  Widget _hideAppBar(Widget page) {
+    return ClipRect(
+      child: OverflowBox(
+        maxHeight: double.infinity,
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height + 80, // +80 untuk offset AppBar
           ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-            Card(
-              child: ListTile(
-                leading: const Icon(
-                  Icons.receipt_long,
-                  color: Color(0xFF5C6BC0),
-                ),
-                title: const Text('Tagihan'),
-                subtitle: const Text('Kelola tagihan dan status pembayaran'),
-                trailing: const Icon(Icons.chevron_right),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Card(
-              child: ListTile(
-                leading: const Icon(
-                  Icons.arrow_downward,
-                  color: Color(0xFF43A047),
-                ),
-                title: const Text('Pemasukan'),
-                subtitle: const Text('Rekap pemasukan'),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () {
-                  Navigator.pushNamed(context, Routes.income);
-                },
-              ),
-            ),
-            const SizedBox(height: 8),
-            Card(
-              child: ListTile(
-                leading: const Icon(
-                  Icons.arrow_upward,
-                  color: Color(0xFFE53935),
-                ),
-                title: const Text('Pengeluaran'),
-                subtitle: const Text('Rekap pengeluaran'),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () {
-                  Navigator.pushNamed(context, Routes.expenses);
-                },
-              ),
-            ),
-            const SizedBox(height: 8),
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.bar_chart, color: Color(0xFF2E6BFF)),
-                title: const Text('Laporan'),
-                subtitle: const Text('Ekspor laporan keuangan'),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () {
-                  Navigator.pushNamed(context, Routes.report);
-                },
-              ),
-            ),
-            const SizedBox(height: 24),
-              ],
-            ),
+          child: Transform.translate(
+            offset: const Offset(0, -80), // Push page up by AppBar height
+            child: page,
           ),
-        ],
+        ),
       ),
     );
+  }
+
+  Widget _buildKeuangan() {
+    // Langsung tampilkan halaman Laporan Keuangan
+    return const LaporanPage();
   }
 }

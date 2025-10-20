@@ -4,12 +4,14 @@ class BottomNavScaffold extends StatelessWidget {
   final int currentIndex;
   final void Function(int) onTap;
   final Widget body;
+  final bool showNavbar;
 
   const BottomNavScaffold({
     Key? key,
     required this.currentIndex,
     required this.onTap,
     required this.body,
+    this.showNavbar = true,
   }) : super(key: key);
 
   @override
@@ -25,7 +27,7 @@ class BottomNavScaffold extends StatelessWidget {
 
     return Scaffold(
       body: body,
-      bottomNavigationBar: Container(
+      bottomNavigationBar: showNavbar ? Container(
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: const BorderRadius.only(
@@ -81,7 +83,7 @@ class BottomNavScaffold extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      ) : null,
     );
   }
 

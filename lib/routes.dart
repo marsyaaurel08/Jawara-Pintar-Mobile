@@ -33,17 +33,16 @@ class Routes {
   static const String approvals = '/approvals';
   static const String mutations = '/mutations';
   static const addKeuangan = '/add-keuangan';
+  static const String tagihan = '/tagihan';
 }
 
 final Map<String, WidgetBuilder> appRoutes = {
   Routes.login: (_) => const LoginPage(),
   Routes.register: (_) => const RegisterPage(),
-
-  '/home': (_) => const HomePage(),
-  '/income': (_) => const PemasukanPage(),
-  '/expenses': (_) => const PengeluaranPage(),
-  '/report': (_) => const LaporanPage(),
   Routes.home: (_) => const HomePage(),
+  Routes.income: (_) => const PemasukanPage(),
+  Routes.expenses: (_) => const PengeluaranPage(),
+  Routes.report: (_) => const LaporanPage(),
   Routes.kegiatan: (_) => const KegiatanPage(),
   Routes.broadcast: (_) => const BroadcastPage(),
   Routes.aspirasi: (_) => const AspirasiPage(),
@@ -51,6 +50,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   Routes.activityLog: (_) => const ActivityLogScreen(),
   Routes.approvals: (_) => const ResidentApprovalsScreen(),
   Routes.mutations: (_) => const FamilyMutationScreen(),
+  Routes.tagihan: (_) => const TagihanPage(),
   Routes.addKeuangan: (ctx) {
     final arg = ModalRoute.of(ctx)?.settings.arguments;
     int idx = 0;
