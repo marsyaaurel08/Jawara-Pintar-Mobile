@@ -281,69 +281,69 @@ class _RumahListPageState extends State<RumahListPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50, // Memberi background di luar card
       // Menggunakan AppBar dengan container biru
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80),
-        child: AppBar(
-          backgroundColor: const Color.fromARGB(255, 5, 117, 209),
-          elevation: 0,
-          automaticallyImplyLeading: false, // Disable automatic back button
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  const Color.fromARGB(255, 5, 117, 209),
-                  const Color.fromARGB(255, 3, 95, 170),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        // Back button putih
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back, color: Colors.white),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        const SizedBox(width: 4),
-                        // Icon rumah
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Icon(
-                            Icons.home_outlined,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          'Data Rumah',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+      // appBar: PreferredSize(
+      //   preferredSize: const Size.fromHeight(80),
+      //   child: AppBar(
+      //     backgroundColor: const Color.fromARGB(255, 5, 117, 209),
+      //     elevation: 0,
+      //     automaticallyImplyLeading: false, // Disable automatic back button
+      //     flexibleSpace: Container(
+      //       decoration: BoxDecoration(
+      //         gradient: LinearGradient(
+      //           colors: [
+      //             const Color.fromARGB(255, 5, 117, 209),
+      //             const Color.fromARGB(255, 3, 95, 170),
+      //           ],
+      //           begin: Alignment.topLeft,
+      //           end: Alignment.bottomRight,
+      //         ),
+      //       ),
+      //       child: SafeArea(
+      //         child: Padding(
+      //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      //           child: Column(
+      //             mainAxisAlignment: MainAxisAlignment.center,
+      //             crossAxisAlignment: CrossAxisAlignment.start,
+      //             children: [
+      //               Row(
+      //                 children: [
+      //                   // Back button putih
+      //                   IconButton(
+      //                     icon: const Icon(Icons.arrow_back, color: Colors.white),
+      //                     onPressed: () => Navigator.pop(context),
+      //                   ),
+      //                   const SizedBox(width: 4),
+      //                   // Icon rumah
+      //                   Container(
+      //                     padding: const EdgeInsets.all(8),
+      //                     decoration: BoxDecoration(
+      //                       color: Colors.white.withOpacity(0.2),
+      //                       borderRadius: BorderRadius.circular(10),
+      //                     ),
+      //                     child: const Icon(
+      //                       Icons.home_outlined,
+      //                       color: Colors.white,
+      //                       size: 24,
+      //                     ),
+      //                   ),
+      //                   const SizedBox(width: 12),
+      //                   const Text(
+      //                     'Data Rumah',
+      //                     style: TextStyle(
+      //                       color: Colors.white,
+      //                       fontSize: 22,
+      //                       fontWeight: FontWeight.bold,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      // ),
 
       body: Column(
         children: [

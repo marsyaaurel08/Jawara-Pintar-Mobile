@@ -304,8 +304,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildData() {
-    // Use a segmented control + AnimatedSize so the content can determine height
-    // and match the Analytics tab switching visuals.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -424,37 +422,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
 
-        // Content area - tampilkan page dengan AppBar hidden
+        // Content area - tampilkan page langsung
         Expanded(
           child: IndexedStack(
             index: dataIndex,
-            children: [
-              _hideAppBar(WargaListPage()),
-              _hideAppBar(RumahListPage()),
-              _hideAppBar(KeluargaListPage()),
-            ],
+            children: [WargaListPage(), RumahListPage(), KeluargaListPage()],
           ),
         ),
       ],
-    );
-  }
-
-  // Helper method untuk hide AppBar dari page
-  Widget _hideAppBar(Widget page) {
-    return ClipRect(
-      child: OverflowBox(
-        maxHeight: double.infinity,
-        alignment: Alignment.topCenter,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height + 80, // +80 untuk offset AppBar
-          ),
-          child: Transform.translate(
-            offset: const Offset(0, -80), // Push page up by AppBar height
-            child: page,
-          ),
-        ),
-      ),
     );
   }
 
