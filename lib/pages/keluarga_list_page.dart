@@ -3,7 +3,6 @@ import '../pages/tambah_keluarga_page.dart';
 
 // Import file Anda yang sudah ada
 import '../pages/detail_keluarga_page.dart'; 
-import '../pages/edit_keluarga_page.dart'; 
 
 // CATATAN: Definisi KeluargaData sudah ada di sini, jadi tidak perlu import model terpisah
 // jika Anda memutuskan untuk menaruhnya di file ini.
@@ -59,10 +58,8 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
   String? _selectedStatusFilter;
 
   // Ukuran Font Default untuk Mobile
-  static const double _fontSizeTitle = 15.0;
   static const double _fontSizeSubtitle = 12.0;
   static const double _fontSizeBadge = 10.0;
-  static const double _cardPadding = 12.0; 
   static const double _fabBottomPadding = 80.0; 
 
   // --- LOGIC FILTERING (Menggunakan KeluargaData) ---
@@ -110,7 +107,7 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: _backgroundColor,
       // appBar: PreferredSize(
       //   preferredSize: const Size.fromHeight(80),
       //   child: AppBar(
@@ -172,188 +169,6 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
       //     ),
       //   ),
       // ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(12.0),
-        itemCount: dummyKeluargaList.length,
-        itemBuilder: (context, index) {
-          final keluarga = dummyKeluargaList[index];
-          
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Card(
-              elevation: 4, // Memberi kesan mendalam
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              child: ListTile(
-                // Leading: Nomor urut atau Icon
-                leading: CircleAvatar(
-                  backgroundColor: primaryColor,
-                  child: Text(
-                    keluarga.no.toString(),
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  RadioListTile<String?>(
-                    title: const Text('Nonaktif'),
-                    value: 'Nonaktif',
-                    groupValue: tempStatus,
-                    onChanged: (String? value) =>
-                        setStateSB(() => tempStatus = value),
-                    dense: true,
-                    activeColor: _primaryColor,
-                  ),
-                  RadioListTile<String?>(
-                    title: const Text('Semua Status'),
-                    value: null,
-                    groupValue: tempStatus,
-                    onChanged: (String? value) =>
-                        setStateSB(() => tempStatus = value),
-                    dense: true,
-                    activeColor: _primaryColor,
-                  ),
-                ],
-              );
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Batal'),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: _primaryColor, foregroundColor: Colors.white),
-              child: const Text('Terapkan'),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (result == true) {
-      setState(() {
-        _selectedStatusFilter = tempStatus;
-        isFilterActive = tempStatus != null;
-      });
-    }
-  }
-
-  // WIDGET: Card untuk setiap item keluarga (Menggunakan KeluargaData)
-  Widget _buildKeluargaCard(KeluargaData keluarga, BuildContext context) { // Tipe data diubah
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      elevation: 6, 
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16), 
-      ),
-      child: InkWell(
-        // Fungsionalitas Detail dipindahkan ke onTap Card
-        onTap: () => _handleAction('Detail', keluarga, context),
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(_cardPadding),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // LEADING: Ikon Keluarga
-              CircleAvatar(
-                radius: 28, 
-                backgroundColor: _primaryColor.withOpacity(0.15),
-                child: const Icon( 
-                  Icons.groups_2_outlined, 
-                  size: 30,
-                  color: _primaryColor,
-                ),
-              ),
-              const SizedBox(width: 12),
-              
-              // CONTENT UTAMA (Title & Subtitle + Status Badge)
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title: Nama Keluarga
-                    Text(
-                      keluarga.namaKeluarga,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: _fontSizeTitle + 1, 
-                          color: _textColor),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    
-                    // Subtitle: Informasi Detail
-                    _buildDetailRow(
-                        Icons.person_outline, "Kepala", keluarga.kepalaKeluarga),
-                    _buildDetailRow(
-                        Icons.location_on_outlined, "Alamat", keluarga.alamatRumah),
-                    const SizedBox(height: 4),
-                    
-                    // Status Kepemilikan (Highlight)
-                    _buildDetailRow(Icons.account_balance_wallet_outlined,
-                        "Kepemilikan", keluarga.statusKepemilikan,
-                        isAccent: true),
-                    
-                    // Badge Status
-                    const SizedBox(height: 8),
-                    _buildStatusBadge(keluarga.status),
-                  ],
-                ),
-              ),
-
-              // --- TRAILING: Ikon Edit dan Hapus (Pengganti Titik Tiga) ---
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Icon Edit
-                  IconButton(
-                    icon: const Icon(
-                      Icons.edit_note_rounded, // Ikon edit dengan pena
-                      color: _primaryColor,
-                      size: 26,
-                    ),
-                    onPressed: () => _handleAction('Edit', keluarga, context),
-                    tooltip: 'Edit Data Keluarga',
-                  ),
-                  // Icon Hapus
-                  IconButton(
-                    icon: const Icon(
-                      Icons.delete_forever_rounded, // Ikon hapus yang tegas
-                      color: Colors.red,
-                      size: 26,
-                    ),
-                    onPressed: () => _handleAction('Hapus', keluarga, context),
-                    tooltip: 'Hapus Data Keluarga',
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // --------------------------------------------------------------------------
-  // --- WIDGET UTAMA: BUILD (Tidak Berubah) ---
-  // --------------------------------------------------------------------------
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _backgroundColor,
-
-      appBar: AppBar(
-        backgroundColor: _primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0, 
-        title: const Text(
-          'Daftar Keluarga',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      ),
-
       body: Column(
         children: [
           // Search Bar and Filter Button
@@ -455,7 +270,7 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
                     ),
                   )
                 : ListView.builder(
-                    padding: EdgeInsets.only(top: 8.0, bottom: _fabBottomPadding), 
+                    padding: const EdgeInsets.only(top: 8.0, bottom: _fabBottomPadding), 
                     itemCount: _filteredKeluargaList.length,
                     itemBuilder: (context, index) {
                       final keluarga = _filteredKeluargaList[index];
@@ -480,6 +295,269 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
         tooltip: 'Tambah Keluarga',
         shape: RoundedRectangleBorder( 
           borderRadius: BorderRadius.circular(12.0), 
+        ),
+      ),
+    );
+  }
+
+  // --- FUNCTION: Show Filter Dialog ---
+  void _showFilterDialog(BuildContext context) {
+    String? tempStatus = _selectedStatusFilter;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setStateSB) {
+            return AlertDialog(
+              title: const Text('Filter Data Keluarga'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RadioListTile<String?>(
+                    title: const Text('Aktif'),
+                    value: 'Aktif',
+                    groupValue: tempStatus,
+                    onChanged: (String? value) =>
+                        setStateSB(() => tempStatus = value),
+                    dense: true,
+                    activeColor: _primaryColor,
+                  ),
+                  RadioListTile<String?>(
+                    title: const Text('Nonaktif'),
+                    value: 'Nonaktif',
+                    groupValue: tempStatus,
+                    onChanged: (String? value) =>
+                        setStateSB(() => tempStatus = value),
+                    dense: true,
+                    activeColor: _primaryColor,
+                  ),
+                  RadioListTile<String?>(
+                    title: const Text('Semua Status'),
+                    value: null,
+                    groupValue: tempStatus,
+                    onChanged: (String? value) =>
+                        setStateSB(() => tempStatus = value),
+                    dense: true,
+                    activeColor: _primaryColor,
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Batal'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _selectedStatusFilter = tempStatus;
+                      isFilterActive = tempStatus != null;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: _primaryColor, foregroundColor: Colors.white),
+                  child: const Text('Terapkan'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // Helper widget untuk detail row
+  Widget _buildDetailRow(IconData icon, String label, String value,
+      {bool isAccent = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 2.0),
+      child: Row(
+        children: [
+          Icon(icon, size: 14, color: isAccent ? _secondaryColor : _textColor),
+          const SizedBox(width: 4),
+          Text(
+            "$label: ",
+            style: TextStyle(
+              fontSize: _fontSizeSubtitle,
+              fontWeight: FontWeight.w600,
+              color: _textColor.withOpacity(0.7),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: _fontSizeSubtitle,
+                color: isAccent ? _secondaryColor : _textColor,
+                fontWeight: isAccent ? FontWeight.bold : FontWeight.normal,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Handler untuk aksi edit, detail, dan hapus
+  void _handleAction(String action, KeluargaData keluarga, BuildContext context) {
+    switch (action) {
+      case 'Detail':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailKeluargaPage(keluarga: keluarga),
+          ),
+        );
+        break;
+      case 'Edit':
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => EditKeluargaPage(keluargaData: keluarga),
+        //   ),
+        // );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Fitur Edit belum tersedia')),
+        );
+        break;
+      case 'Hapus':
+        _showDeleteConfirmation(context, keluarga);
+        break;
+    }
+  }
+
+  // Konfirmasi hapus
+  void _showDeleteConfirmation(BuildContext context, KeluargaData keluarga) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Hapus'),
+          content: Text(
+              'Apakah Anda yakin ingin menghapus data keluarga "${keluarga.namaKeluarga}"?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  dummyKeluargaList.remove(keluarga);
+                });
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content:
+                          Text('Data keluarga "${keluarga.namaKeluarga}" berhasil dihapus')),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red, foregroundColor: Colors.white),
+              child: const Text('Hapus'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // WIDGET: Card untuk setiap item keluarga (Menggunakan KeluargaData)
+  Widget _buildKeluargaCard(KeluargaData keluarga, BuildContext context) { // Tipe data diubah
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 6, 
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16), 
+      ),
+      child: InkWell(
+        // Fungsionalitas Detail dipindahkan ke onTap Card
+        onTap: () => _handleAction('Detail', keluarga, context),
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // LEADING: Ikon Keluarga
+              CircleAvatar(
+                radius: 28, 
+                backgroundColor: _primaryColor.withOpacity(0.15),
+                child: const Icon( 
+                  Icons.groups_2_outlined, 
+                  size: 30,
+                  color: _primaryColor,
+                ),
+              ),
+              const SizedBox(width: 12),
+              
+              // CONTENT UTAMA (Title & Subtitle + Status Badge)
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title: Nama Keluarga
+                    Text(
+                      keluarga.namaKeluarga,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16.0, 
+                          color: _textColor),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    
+                    // Subtitle: Informasi Detail
+                    _buildDetailRow(
+                        Icons.person_outline, "Kepala", keluarga.kepalaKeluarga),
+                    _buildDetailRow(
+                        Icons.location_on_outlined, "Alamat", keluarga.alamatRumah),
+                    const SizedBox(height: 4),
+                    
+                    // Status Kepemilikan (Highlight)
+                    _buildDetailRow(Icons.account_balance_wallet_outlined,
+                        "Kepemilikan", keluarga.statusKepemilikan,
+                        isAccent: true),
+                    
+                    // Badge Status
+                    const SizedBox(height: 8),
+                    _buildStatusBadge(keluarga.status),
+                  ],
+                ),
+              ),
+
+              // --- TRAILING: Ikon Edit dan Hapus (Pengganti Titik Tiga) ---
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Icon Edit
+                  IconButton(
+                    icon: const Icon(
+                      Icons.edit_note_rounded, // Ikon edit dengan pena
+                      color: _primaryColor,
+                      size: 26,
+                    ),
+                    onPressed: () => _handleAction('Edit', keluarga, context),
+                    tooltip: 'Edit Data Keluarga',
+                  ),
+                  // Icon Hapus
+                  IconButton(
+                    icon: const Icon(
+                      Icons.delete_forever_rounded, // Ikon hapus yang tegas
+                      color: Colors.red,
+                      size: 26,
+                    ),
+                    onPressed: () => _handleAction('Hapus', keluarga, context),
+                    tooltip: 'Hapus Data Keluarga',
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
