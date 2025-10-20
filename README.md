@@ -46,13 +46,14 @@ Dibangun dengan **Flutter**, aplikasi ini menghadirkan tampilan modern, ringan, 
 | Marsya Aurelia Sefira         | 2341720011                       |
 ---
 ### 🧑‍💻 **Pembagian Pengerjaan Fitur**
-PIC	NIM	Fitur Tanggung Jawab
-Taufik Dimas Edystara	2341720062	Login, Register, Dashboard, Analitik
-Afrizal Qurratul Faizin	234172????	Pemasukan, Pengeluaran, Laporan Keuangan
-Marsya Aurelia Sefira	2341720011	Data Warga, Data Rumah, Keluarga
-Aril Ibbet Ardana Putra	2341720095	Tagihan, Iuran, Channel Transfer
-Rangga Dwi Saputra	234172????	Kegiatan, Broadcast, Aspirasi
-Damar Galih Fitrianto	2341720200	Manajemen Pengguna, Log Aktivitas, Penerimaan Warga, Mutasi Keluarga
+| PIC                         | NIM        | Fitur Tanggung Jawab                                                 |
+| --------------------------- | ---------- | -------------------------------------------------------------------- |
+| **Taufik Dimas Edystara**   | 2341720062 | Login, Register, Dashboard, Analitik                                 |
+| **Afrizal Qurratul Faizin** | 234172???? | Pemasukan, Pengeluaran, Laporan Keuangan                             |
+| **Marsya Aurelia Sefira**   | 2341720011 | Data Warga, Data Rumah, Keluarga                                     |
+| **Aril Ibbet Ardana Putra** | 2341720095 | Tagihan, Iuran, Channel Transfer                                     |
+| **Rangga Dwi Saputra**      | 234172???? | Kegiatan, Broadcast, Aspirasi                                        |
+| **Damar Galih Fitrianto**   | 2341720200 | Manajemen Pengguna, Log Aktivitas, Penerimaan Warga, Mutasi Keluarga |
 
 
 ### 💻 **Getting Started**
