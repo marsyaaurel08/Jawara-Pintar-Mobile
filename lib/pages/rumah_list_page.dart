@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 // Asumsi path TambahRumahPage yang benar sudah di-import
-import '../../pages/tambah_rumah_page.dart'; 
+import '../../pages/tambah_rumah_page.dart';
+// Import file detail yang baru
+import '../../pages/detail_rumah_page.dart';
+import '../../pages/edit_rumah_page.dart';
 
 class RumahListPage extends StatefulWidget {
   const RumahListPage({Key? key}) : super(key: key);
@@ -10,17 +13,21 @@ class RumahListPage extends StatefulWidget {
 }
 
 class _RumahListPageState extends State<RumahListPage> {
-  // --- Skema Warna Soft dan Nyaman (Mint/Teal) ---
-  static const Color _primaryColor = Color(0xFF00BFA6); // Teal/Mint yang lembut
-  static const Color _lightColor = Color(0xFFE0F7FA);   // Background soft
-  static const Color _textColor = Color(0xFF37474F);    // Abu-abu gelap
-  
-  // Penyesuaian Ukuran Font untuk Mobile
-  static const double _appBarTitleSize = 18.0;
-  static const double _cardTitleSize = 15.0; // Alamat rumah
-  static const double _cardSubtitleSize = 11.0; // Penghuni/status
+  // --- Skema Warna Konsisten dengan WargaListPage (Biru Tua) ---
+  static const Color _primaryColor = Color(0xFF2E6BFF); // Biru Tua (Deep Blue)
+  static const Color _accentColor = Color(
+    0xFF00C853,
+  ); // Hijau untuk status Tersedia
+  static const Color _editColor = Color(0xFFFF9800); // Orange untuk Edit
+  static const Color _textColor = Color(
+    0xFF37474F,
+  ); // Abu-abu gelap (Deep Grey)
 
-  // --- Data Dummy Rumah ---
+  // Penyesuaian Ukuran Font untuk Mobile
+  static const double _cardTitleSize = 15.0;
+  static const double _cardSubtitleSize = 12.0;
+
+  // --- Data Dummy Rumah (Dibuat final agar bisa dimodifikasi di State) ---
   final List<Map<String, dynamic>> _allRumahList = [
     {
       "id": 1,
@@ -29,6 +36,11 @@ class _RumahListPageState extends State<RumahListPage> {
       "status": "Tersedia",
       "luas": 120,
       "jenis": "Permanen",
+      "rt": "001",
+      "rw": "01",
+      "keluarga": "Keluarga Lainnya",
+      "statusKepemilikan": "Pemilik",
+      "statusRumah": "Kosong", // Digunakan di Edit Page
     },
     {
       "id": 2,
@@ -38,6 +50,11 @@ class _RumahListPageState extends State<RumahListPage> {
       "luas": 90,
       "jenis": "Semi Permanen",
       "penghuni": "Keluarga Farhan Aditia",
+      "rt": "002",
+      "rw": "01",
+      "keluarga": "Keluarga Farhan Aditia",
+      "statusKepemilikan": "Penyewa",
+      "statusRumah": "Aktif",
       "riwayat": [
         {"nama": "Keluarga Budi Santoso", "periode": "2018 - 2021"},
       ],
@@ -50,6 +67,11 @@ class _RumahListPageState extends State<RumahListPage> {
       "luas": 150,
       "jenis": "Permanen",
       "penghuni": "Keluarga Rendha Putra",
+      "rt": "003",
+      "rw": "02",
+      "keluarga": "Keluarga Rendha Putra",
+      "statusKepemilikan": "Pemilik",
+      "statusRumah": "Aktif",
       "riwayat": [
         {"nama": "Keluarga Siti Aminah", "periode": "2015 - 2017"},
         {"nama": "Keluarga John Doe", "periode": "2010 - 2014"},
@@ -62,6 +84,11 @@ class _RumahListPageState extends State<RumahListPage> {
       "status": "Tersedia",
       "luas": 80,
       "jenis": "Semi Permanen",
+      "rt": "004",
+      "rw": "02",
+      "keluarga": "Keluarga Lainnya",
+      "statusKepemilikan": "Pemilik",
+      "statusRumah": "Kosong",
     },
     {
       "id": 5,
@@ -71,161 +98,72 @@ class _RumahListPageState extends State<RumahListPage> {
       "luas": 100,
       "jenis": "Permanen",
       "penghuni": "Keluarga Anti Micin",
+      "rt": "005",
+      "rw": "03",
+      "keluarga": "Keluarga Anti Micin",
+      "statusKepemilikan": "Pinjam Pakai",
+      "statusRumah": "Aktif",
     },
   ];
 
-  // --- State Variables & Filter Logic (TIDAK BERUBAH) ---
   String _searchQuery = '';
-  
-  List<Map<String, dynamic>> get _filteredRumahList {
-    return _allRumahList.where((rumah) {
-      final matchesSearch = rumah['alamat']
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase()) ||
-          rumah['no_rumah'].contains(_searchQuery);
-      return matchesSearch;
-    }).toList();
-  }
+  bool isFilterActive = false; // Status filter sederhana
 
-  // --------------------------------------------------------------------------
-  // --- FUNGSI UTILITY: Dialog & Aksi (DISESUAIKAN FONT) ---
-  // --------------------------------------------------------------------------
+  // --- FUNGSI NAVIGASI & AKSI BARU ---
 
-  // FUNGSI BARU: Menampilkan Dialog Detail Rumah (menggantikan halaman navigasi)
-  void _showDetailDialog(BuildContext context, Map<String, dynamic> rumah) {
-    final statusColor = rumah['status'] == 'Tersedia' ? Colors.green.shade700 : Colors.blue.shade700;
-    final List<Map<String, String>> riwayatPenghuni = (rumah['riwayat'] as List<dynamic>?)?.cast<Map<String, String>>() ?? [];
-
-    Widget _buildDetailRow(String label, String value, {Color color = _textColor, double valueSize = 14.0}) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 140, 
-              child: Text("$label:",
-                  style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.grey, fontSize: 13.0)),
-            ),
-            Expanded(
-              child: Text(value,
-                  style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: valueSize)),
-            ),
-          ],
-        ),
-      );
-    }
-    
-    // Helper untuk Riwayat Penghuni di dalam dialog
-    Widget _buildRiwayatSection() {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
-              child: Text(
-                "Riwayat Penghuni",
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15.0, color: _primaryColor),
-              ),
-            ),
-            const Divider(height: 10, thickness: 0.5),
-            if (riwayatPenghuni.isEmpty)
-              const Text(
-                "Belum ada riwayat penghuni.",
-                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey, fontSize: 13.0),
-              )
-            else
-              ...riwayatPenghuni.map((riwayat) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          riwayat['nama']!,
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: _textColor, fontSize: 14.0),
-                        ),
-                        Text(
-                          "Periode: ${riwayat['periode']}",
-                          style: const TextStyle(color: Colors.grey, fontSize: 12.0),
-                        ),
-                      ],
-                    ),
-                  )).toList(),
-          ],
-        );
-    }
-
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          title: Text(
-            "Detail Rumah",
-            style: const TextStyle(fontWeight: FontWeight.bold, color: _primaryColor, fontSize: 16.0),
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                // Bagian Detail Rumah
-                _buildDetailRow("Nomor Rumah", rumah['no_rumah'] ?? 'N/A', valueSize: 14.0),
-                _buildDetailRow("Alamat", rumah['alamat'] ?? 'N/A', valueSize: 14.0),
-                _buildDetailRow("Status", rumah['status'] ?? 'N/A', color: statusColor, valueSize: 14.0),
-                
-                const Divider(height: 16),
-                _buildDetailRow("Jenis Bangunan", rumah['jenis'] ?? 'N/A'),
-                _buildDetailRow("Luas (m²)", "${rumah['luas'] ?? 'N/A'}"),
-                if (rumah['status'] == 'Ditempati')
-                  _buildDetailRow("Penghuni Saat Ini", rumah['penghuni'] ?? '-'),
-
-                // Bagian Riwayat Penghuni
-                _buildRiwayatSection(),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('TUTUP', style: TextStyle(color: _primaryColor, fontSize: 14.0)),
-            ),
-          ],
-        );
-      },
+  void _navigateToDetail(Map<String, dynamic> rumah) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DetailRumahPage(rumah: rumah)),
     );
   }
 
-  // FUNGSI: Aksi Menu (Detail, Edit, Hapus) - (TIDAK BERUBAH)
-  void _handleMenuAction(
-      String action, BuildContext context, Map<String, dynamic> rumah) {
-    switch (action) {
-      case 'Detail':
-        _showDetailDialog(context, rumah);
-        break;
-      case 'Edit':
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Navigasi ke Edit Rumah No. ${rumah['no_rumah']}")),
-        );
-        break;
-      case 'Hapus':
-        _showDeleteConfirmation(context, rumah);
-        break;
-    }
+  void _navigateToEdit(BuildContext context, Map<String, dynamic> dataRumah) {
+    // Tentukan nilai fallback yang aman dan ada di list opsi EditRumahPage
+    final String fallbackKeluarga = 'Keluarga Lainnya';
+    final String rawKeluarga = dataRumah['keluarga'] ?? fallbackKeluarga;
+
+    // Jika nilai dari data adalah "Tidak Ada" (atau nilai tidak valid lainnya),
+    // ganti dengan nilai fallback yang ada di dropdown list.
+    final String selectedKeluarga = (rawKeluarga == 'Tidak Ada')
+        ? fallbackKeluarga
+        : rawKeluarga;
+
+    final RumahData rumahDipilih = RumahData(
+      alamatRumah: dataRumah['alamat'] ?? '',
+      rt: dataRumah['rt'] ?? '001',
+      rw: dataRumah['rw'] ?? '01',
+      keluarga: selectedKeluarga, // <-- GUNAKAN NILAI YANG SUDAH DIPERBAIKI
+      statusKepemilikan: dataRumah['statusKepemilikan'] ?? 'Pemilik',
+      statusRumah: dataRumah['statusRumah'] ?? 'Aktif',
+    );
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditRumahPage(rumahToEdit: rumahDipilih),
+      ),
+    );
   }
 
-  // FUNGSI: Konfirmasi Hapus (TIDAK BERUBAH)
-  void _showDeleteConfirmation(BuildContext context, Map<String, dynamic> rumah) {
+  void _onDeleteRumah(Map<String, dynamic> rumah) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Konfirmasi Hapus", style: TextStyle(color: Colors.red, fontSize: 16.0)),
-        content: Text("Anda yakin ingin menghapus data rumah No. ${rumah['no_rumah']}?", style: const TextStyle(fontSize: 14.0)),
+        title: const Text(
+          "Konfirmasi Hapus",
+          style: TextStyle(color: Colors.red, fontSize: 16.0),
+        ),
+        content: Text(
+          "Anda yakin ingin menghapus data rumah No. ${rumah['no_rumah']}?",
+          style: const TextStyle(fontSize: 14.0),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Batal", style: TextStyle(color: _textColor, fontSize: 14.0)),
+            child: const Text(
+              "Batal",
+              style: TextStyle(color: _textColor, fontSize: 14.0),
+            ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -248,79 +186,293 @@ class _RumahListPageState extends State<RumahListPage> {
     );
   }
 
+  // --- FUNGSI FILTER (TETAP SAMA) ---
+
+  void _showFilterDialog(BuildContext context) {
+    // ... (Kode Filter Dialog tetap sama) ...
+    bool tempFilter = isFilterActive;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Filter Data Rumah'),
+        content: StatefulBuilder(
+          builder: (context, setStateSB) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Filter sederhana
+              CheckboxListTile(
+                value: tempFilter,
+                onChanged: (value) => setStateSB(() {
+                  tempFilter = value ?? false;
+                }),
+                title: const Text('Tampilkan hanya status Tersedia'),
+              ),
+              const Text(
+                "Filter ini hanya contoh. Di implementasi nyata, Anda bisa menambahkan filter berdasarkan jenis bangunan atau status lain.",
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                isFilterActive = tempFilter;
+              });
+              Navigator.of(context).pop();
+            },
+            child: const Text('Terapkan'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Map<String, dynamic>> get _filteredRumahList {
+    List<Map<String, dynamic>> list = _allRumahList.where((rumah) {
+      final matchesSearch =
+          rumah['alamat'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          rumah['no_rumah'].contains(_searchQuery);
+
+      final matchesFilter = isFilterActive
+          ? (rumah['status'] ==
+                'Tersedia') // Contoh: hanya tampilkan yang tersedia
+          : true;
+
+      return matchesSearch && matchesFilter;
+    }).toList();
+
+    return list;
+  }
+
+  // --- Widget pembantu untuk Badge Status (TETAP SAMA) ---
+  Widget _buildStatusBadge(String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(
+          5,
+        ), // Kotak dengan sudut sedikit membulat
+        border: Border.all(color: color, width: 0.8),
+      ),
+      child: Text(
+        label.toUpperCase(),
+        style: TextStyle(
+          color: color,
+          fontWeight: FontWeight.bold,
+          fontSize: 10,
+        ),
+      ),
+    );
+  }
+
   // --------------------------------------------------------------------------
-  // --- WIDGET UTAMA: BUILD (DISESUAIKAN FONT) ---
+  // --- WIDGET UTAMA: BUILD (LIST PAGE) ---
   // --------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: _primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        title: const Text('Data Rumah', style: TextStyle(fontWeight: FontWeight.bold, fontSize: _appBarTitleSize)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              // TODO: Implementasi Dialog Filter
-            },
-            tooltip: 'Filter',
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-              },
-              style: const TextStyle(fontSize: 14.0),
-              decoration: InputDecoration(
-                hintText: 'Cari alamat atau nomor rumah...',
-                prefixIcon: const Icon(Icons.search, color: _primaryColor),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  borderSide: BorderSide.none,
+      backgroundColor: Colors.grey.shade50, // Memberi background di luar card
+      // Menggunakan AppBar dengan container biru
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80),
+        child: AppBar(
+          backgroundColor: const Color.fromARGB(255, 5, 117, 209),
+          elevation: 0,
+          automaticallyImplyLeading: false, // Disable automatic back button
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color.fromARGB(255, 5, 117, 209),
+                  const Color.fromARGB(255, 3, 95, 170),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        // Back button putih
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        const SizedBox(width: 4),
+                        // Icon rumah
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.home_outlined,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Data Rumah',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                filled: true,
-                fillColor: _lightColor.withOpacity(0.5),
-                contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
               ),
             ),
           ),
+        ),
+      ),
+
+      body: Column(
+        children: [
+          // Search Bar and Filter Button (TETAP SAMA)
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
+                    style: const TextStyle(fontSize: 14.0),
+                    decoration: InputDecoration(
+                      hintText: 'Cari alamat atau nomor rumah...',
+                      hintStyle: const TextStyle(fontSize: 14),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: _primaryColor,
+                        size: 20,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: _primaryColor.withOpacity(0.05),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 12,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Button Filter
+                Container(
+                  decoration: BoxDecoration(
+                    color: isFilterActive
+                        ? _primaryColor
+                        : Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.filter_list,
+                      color: isFilterActive ? Colors.white : Colors.black87,
+                      size: 20,
+                    ),
+                    onPressed: () => _showFilterDialog(context),
+                    tooltip: 'Filter Data',
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Filter Reset Chip (TETAP SAMA)
+          if (isFilterActive)
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, bottom: 6.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: ActionChip(
+                  avatar: const Icon(
+                    Icons.close,
+                    color: _primaryColor,
+                    size: 16,
+                  ),
+                  label: const Text(
+                    'Filter Aktif: Status Tersedia', // Label disederhanakan
+                    style: TextStyle(color: _primaryColor, fontSize: 13),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isFilterActive = false; // Hanya mereset flag filter rumah
+                    });
+                  },
+                  backgroundColor: _primaryColor.withOpacity(0.1),
+                  side: const BorderSide(color: _primaryColor),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
+                ),
+              ),
+            ),
 
           // Rumah List
           Expanded(
             child: _filteredRumahList.isEmpty
-                ? const Center(
-                    child: Text(
-                      'Tidak ada data rumah yang cocok.',
-                      style: TextStyle(fontSize: 15.0, color: Colors.grey),
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.house_siding_outlined,
+                          size: 60,
+                          color: Colors.grey.shade300,
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Tidak ada data rumah yang cocok.',
+                          style: TextStyle(fontSize: 15.0, color: Colors.grey),
+                        ),
+                      ],
                     ),
                   )
                 : ListView.builder(
+                    padding: const EdgeInsets.only(
+                      top: 8.0,
+                      bottom: 80.0,
+                    ), // Padding di bawah untuk FAB
                     itemCount: _filteredRumahList.length,
                     itemBuilder: (context, index) {
                       final rumah = _filteredRumahList[index];
-                      final statusColor = rumah['status'] == 'Tersedia' ? Colors.green.shade600 : Colors.blue.shade600;
-
-                      return _buildRumahCard(rumah, index + 1, statusColor);
+                      return _buildRumahCard(rumah);
                     },
                   ),
           ),
         ],
       ),
+
+      // Floating Action Button (TETAP SAMA)
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigasi ke halaman tambah rumah
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const TambahRumahPage()),
@@ -328,132 +480,140 @@ class _RumahListPageState extends State<RumahListPage> {
         },
         backgroundColor: _primaryColor,
         foregroundColor: Colors.white,
-        tooltip: 'Tambah Rumah Baru',
-        shape: const CircleBorder(),
-        child: const Icon(Icons.add),
+        tooltip: 'Tambah Rumah',
+        child: const Icon(Icons.add, size: 28),
       ),
     );
   }
 
-  // WIDGET: Card untuk setiap item rumah
-  Widget _buildRumahCard(
-      Map<String, dynamic> rumah, int noUrut, Color statusColor) {
+  // --------------------------------------------------------------------------
+  // WIDGET: Card untuk setiap item rumah (DISESUAIKAN UNTUK IKON EDIT/HAPUS)
+  // --------------------------------------------------------------------------
+  Widget _buildRumahCard(Map<String, dynamic> rumah) {
+    final isTersedia = rumah['status'] == 'Tersedia';
+    final statusColor = isTersedia ? _accentColor : _primaryColor;
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      elevation: 4,
+      elevation: 5, // Ditingkatkan sedikit untuk efek 'epic'
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        side: BorderSide(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(15), // Sudut lebih membulat
       ),
-      child: InkWell( // Menggunakan InkWell untuk aksi tap (Detail)
-        onTap: () => _handleMenuAction('Detail', context, rumah),
+      child: InkWell(
+        onTap: () => _navigateToDetail(rumah), // Navigasi ke Detail Page
         borderRadius: BorderRadius.circular(15),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // 1. Nomor Urut
-              Container(
-                width: 30,
-                alignment: Alignment.center,
-                child: Text(
-                  '$noUrut',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.0, // Font sedang
-                    color: _textColor,
-                  ),
-                ),
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+          child: ListTile(
+            // LEADING: Ikon Rumah
+            leading: CircleAvatar(
+              radius: 24,
+              backgroundColor: statusColor.withOpacity(
+                0.1,
+              ), // Warna menyesuaikan status
+              child: Icon(
+                Icons.house_siding_rounded,
+                color: statusColor,
+                size: 28,
               ),
-              const VerticalDivider(width: 10),
+            ),
 
-              // 2. Konten Utama (Alamat & Status)
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            // --- TITLE: Nomor Rumah/Alamat Utama ---
+            title: Text(
+              "${rumah['alamat']}",
+              style: const TextStyle(
+                fontWeight: FontWeight.w800, // Ditebalkan
+                fontSize: _cardTitleSize + 1, // Ditingkatkan sedikit
+                color: _textColor,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
+
+            // --- SUBTITLE: Detail Info Bawah ---
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 6),
+                // Luas & Jenis Bangunan
+                Row(
                   children: [
-                    // Alamat
-                    Text(
-                      rumah['alamat'],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: _cardTitleSize, // Font Alamat
-                        color: _textColor,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    const Icon(
+                      Icons.architecture,
+                      size: 14,
+                      color: Colors.grey,
                     ),
-                    const SizedBox(height: 6),
-                    // Status (Chip)
-                    Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        rumah['status'],
-                        style: TextStyle(
-                          color: statusColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: _cardSubtitleSize, // Font kecil untuk status
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                     // Penghuni (Jika Ditempati)
-                    if (rumah['status'] == 'Ditempati')
+                    const SizedBox(width: 5),
                     Text(
-                      "Penghuni: ${rumah['penghuni'] ?? '-'}",
+                      "${rumah['jenis']} | Luas: ${rumah['luas']} m²",
                       style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: _cardSubtitleSize, // Font kecil untuk penghuni
+                        color: Colors.black54,
+                        fontSize: _cardSubtitleSize,
                       ),
                     ),
                   ],
                 ),
-              ),
 
-              // 3. Ikon Menu Aksi
-              PopupMenuButton<String>(
-                onSelected: (action) => _handleMenuAction(action, context, rumah),
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'Detail',
+                // Penghuni (Jika Ditempati)
+                if (!isTersedia)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.info_outline, color: _primaryColor, size: 20),
-                        SizedBox(width: 8),
-                        Text('Detail', style: TextStyle(fontSize: 14.0)),
+                        const Icon(
+                          Icons.person_pin_circle,
+                          size: 14,
+                          color: Colors.grey,
+                        ),
+                        const SizedBox(width: 5),
+                        Expanded(
+                          child: Text(
+                            "Penghuni: ${rumah['penghuni'] ?? '-'}",
+                            style: TextStyle(
+                              color: Colors.grey.shade700,
+                              fontSize: _cardSubtitleSize,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  const PopupMenuItem(
-                    value: 'Edit',
-                    child: Row(
-                      children: [
-                        Icon(Icons.edit_outlined, color: Colors.orange, size: 20),
-                        SizedBox(width: 8),
-                        Text('Edit', style: TextStyle(fontSize: 14.0)),
-                      ],
-                    ),
+
+                const SizedBox(height: 8),
+
+                // Status Badge
+                _buildStatusBadge(rumah['status'], statusColor),
+              ],
+            ),
+
+            // --- TRAILING: Ikon Edit dan Hapus (Pengganti Titik Tiga) ---
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon Edit
+                IconButton(
+                  icon: const Icon(
+                    Icons.edit_note_rounded, // Ikon edit dengan pena
+                    color: _primaryColor,
+                    size: 26,
                   ),
-                  const PopupMenuItem(
-                    value: 'Hapus',
-                    child: Row(
-                      children: [
-                        Icon(Icons.delete_outline, color: Colors.red, size: 20),
-                        SizedBox(width: 8),
-                        Text('Hapus', style: TextStyle(fontSize: 14.0)),
-                      ],
-                    ),
+                  onPressed: () => _navigateToEdit(context, rumah),
+                  tooltip: 'Edit Data Rumah',
+                ),
+                // Icon Hapus
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete_forever_rounded, // Ikon hapus yang tegas
+                    color: Colors.red,
+                    size: 26,
                   ),
-                ],
-                icon: const Icon(Icons.more_vert, color: _textColor),
-              ),
-            ],
+                  onPressed: () => _onDeleteRumah(rumah),
+                  tooltip: 'Hapus Data Rumah',
+                ),
+              ],
+            ),
           ),
         ),
       ),

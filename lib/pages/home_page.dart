@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../models/feature_item.dart';
-import '../../widgets/dashboard_header.dart';
-import '../../widgets/slider_stat_card.dart';
-import '../../widgets/feature_grid.dart';
+import '../../widgets/home/dashboard_header.dart';
+import '../../widgets/home/slider_stat_card.dart';
+import '../../widgets/home/feature_grid.dart';
 import '../../../widgets/bottom_nav_scaffold.dart';
 import 'analytics_page.dart';
 import 'search_page.dart';
+import 'profile_page.dart';
 import '../routes.dart';
-// removed: import '../../widgets/home_preview.dart';
 import '../../routes.dart';
 import '../../pages/warga_list_page.dart';
 import '../../pages/rumah_list_page.dart';
@@ -241,6 +241,12 @@ class _HomePageState extends State<HomePage> {
                 const SnackBar(content: Text('Tidak ada notifikasi baru')),
               );
             },
+            onProfileTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
+              );
+            },
           ),
           const SizedBox(height: 12),
           SliderStatCard(
@@ -300,20 +306,58 @@ class _HomePageState extends State<HomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Title for Kependudukan tab
-        Padding(
-          padding: const EdgeInsets.all(19),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Kependudukan',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+        // AppBar untuk Kependudukan dengan icon seperti Analitik
+        Container(
+          height: 80,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                const Color.fromARGB(255, 5, 117, 209),
+                const Color.fromARGB(255, 3, 95, 170),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.people_outline,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Kependudukan',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         // segmented control similar to analytics
         Container(
           padding: const EdgeInsets.all(6),
@@ -449,26 +493,65 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildKeuangan() {
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Title for Keuangan tab
-            Padding(
-              padding: const EdgeInsets.all(19),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Keuangan',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // AppBar untuk Keuangan dengan icon seperti Analitik
+          Container(
+            height: 80,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color.fromARGB(255, 5, 117, 209),
+                  const Color.fromARGB(255, 3, 95, 170),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.account_balance_wallet_outlined,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Keuangan',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            const SizedBox(height: 12),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
             Card(
               child: ListTile(
                 leading: const Icon(
@@ -523,8 +606,10 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 24),
-          ],
-        ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

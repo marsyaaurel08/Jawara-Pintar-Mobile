@@ -42,7 +42,7 @@ class _TambahWargaPageState extends State<TambahWargaPage> {
       _formKey.currentState!.save();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Data berhasil disimpan ✅'),
+          content: const Text('Data berhasil disimpan ✅', style: TextStyle(fontSize: 14)), // Font SnackBar diperkecil
           backgroundColor: _primaryColor,
           behavior: SnackBarBehavior.floating,
         ),
@@ -66,31 +66,34 @@ class _TambahWargaPageState extends State<TambahWargaPage> {
   }
 
   Widget _buildTextField(
-    String label,
-    String hint,
-    Function(String) onSaved, {
-    TextInputType keyboardType = TextInputType.text,
-    String? initialValue,
-    int? maxLength,
-    IconData? prefixIcon,
+      String label,
+      String hint,
+      Function(String) onSaved, {
+      TextInputType keyboardType = TextInputType.text,
+      String? initialValue,
+      int? maxLength,
+      IconData? prefixIcon,
   }) {
     return TextFormField(
       initialValue: initialValue ?? '',
       maxLength: maxLength,
+      style: const TextStyle(fontSize: 14), // Font input field diperkecil
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: _primaryColor) : null,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        labelStyle: const TextStyle(fontSize: 14), // Font label diperkecil
+        hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade500), // Font hint diperkecil
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: _primaryColor, size: 20) : null, // Ukuran ikon diperkecil
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)), // Radius diperkecil
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10), // Radius diperkecil
           borderSide: const BorderSide(color: _primaryColor, width: 2.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10), // Radius diperkecil
           borderSide: BorderSide(color: Colors.grey.shade400, width: 1.0),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12), // Padding diperkecil
         counterText: '',
       ),
       keyboardType: keyboardType,
@@ -100,34 +103,36 @@ class _TambahWargaPageState extends State<TambahWargaPage> {
   }
 
   Widget _buildDropdown(
-    String label,
-    String? value,
-    List<String> items,
-    Function(String?) onChanged,
+      String label,
+      String? value,
+      List<String> items,
+      Function(String?) onChanged,
   ) {
     return DropdownButtonFormField<String>(
       value: value,
       items: items
           .map((e) => DropdownMenuItem(
                 value: e,
-                child: Text(e, style: const TextStyle(fontSize: 14)),
+                child: Text(e, style: const TextStyle(fontSize: 14)), // Font item diperkecil
               ))
           .toList(),
       onChanged: onChanged,
+      style: const TextStyle(fontSize: 14, color: Colors.black87), // Font nilai terpilih diperkecil
       decoration: InputDecoration(
         labelText: label,
         hintText: 'Pilih $label',
-        labelStyle: const TextStyle(color: _primaryColor),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        labelStyle: const TextStyle(color: _primaryColor, fontSize: 14), // Font label diperkecil
+        hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade500), // Font hint diperkecil
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)), // Radius diperkecil
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10), // Radius diperkecil
           borderSide: const BorderSide(color: _primaryColor, width: 2.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10), // Radius diperkecil
           borderSide: BorderSide(color: Colors.grey.shade400, width: 1.0),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12), // Padding diperkecil
       ),
       validator: (value) => value == null ? 'Pilih $label' : null,
       isExpanded: true,
@@ -148,6 +153,11 @@ class _TambahWargaPageState extends State<TambahWargaPage> {
               onPrimary: Colors.white, // Warna teks di header
               onSurface: Colors.black87, // Warna teks di DatePicker
             ),
+            textTheme: const TextTheme(
+              titleLarge: TextStyle(fontSize: 18), // Font header DatePicker diperkecil
+              labelLarge: TextStyle(fontSize: 14), // Font tombol DatePicker diperkecil
+              bodyLarge: TextStyle(fontSize: 14), // Font hari diperkecil
+            ),
           ),
           child: child!,
         );
@@ -164,18 +174,18 @@ class _TambahWargaPageState extends State<TambahWargaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tambah Warga Baru', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: const Text('Tambah Warga Baru', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18)), // Font Title AppBar diperkecil
         backgroundColor: _primaryColor, // Warna AppBar
-        iconTheme: const IconThemeData(color: Colors.white), // Warna ikon kembali
+        iconTheme: const IconThemeData(color: Colors.white, size: 22), // Ukuran ikon kembali diperkecil
         centerTitle: true,
       ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(16), // Padding diperkecil
               child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight - 40),
+                constraints: BoxConstraints(minHeight: constraints.maxHeight - 32), // Disesuaikan dengan padding
                 child: IntrinsicHeight(
                   child: Form(
                     key: _formKey,
@@ -185,44 +195,47 @@ class _TambahWargaPageState extends State<TambahWargaPage> {
                         const Center(
                           child: Text(
                             'Informasi Keluarga & Pribadi',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: _primaryColor),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _primaryColor), // Font heading diperkecil
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 16), // Jarak diperkecil
                         _buildTextField('Keluarga', 'Masukkan keluarga', (val) => _keluarga = val,
                             prefixIcon: Icons.family_restroom),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         _buildTextField('Nama', 'Masukkan nama lengkap', (val) => _nama = val,
                             prefixIcon: Icons.person_outline),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         _buildTextField('NIK', 'Masukkan NIK sesuai KTP (16 digit)', (val) => _nik = val,
                             keyboardType: TextInputType.number, maxLength: 16, prefixIcon: Icons.credit_card),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         _buildTextField('Nomor Telepon', 'Contoh: 081234567890', (val) => _telepon = val,
                             keyboardType: TextInputType.phone, prefixIcon: Icons.phone_android),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         _buildTextField('Tempat Lahir', 'Masukkan nama kota/kabupaten',
                             (val) => _tempatLahir = val, prefixIcon: Icons.location_city_outlined),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         GestureDetector(
                           onTap: _selectDate,
                           child: AbsorbPointer(
                             child: TextFormField(
+                              style: const TextStyle(fontSize: 14), // Font input field diperkecil
                               decoration: InputDecoration(
                                 labelText: 'Tanggal Lahir',
                                 hintText: 'Pilih tanggal lahir (dd/mm/yyyy)',
-                                prefixIcon: const Icon(Icons.calendar_today, color: _primaryColor),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                                labelStyle: const TextStyle(fontSize: 14), // Font label diperkecil
+                                hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade500), // Font hint diperkecil
+                                prefixIcon: const Icon(Icons.calendar_today, color: _primaryColor, size: 20), // Ukuran ikon diperkecil
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)), // Radius diperkecil
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(10), // Radius diperkecil
                                   borderSide: const BorderSide(color: _primaryColor, width: 2.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(10), // Radius diperkecil
                                   borderSide: BorderSide(color: Colors.grey.shade400, width: 1.0),
                                 ),
                                 contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12), // Padding diperkecil
                               ),
                               controller: TextEditingController(
                                 text: _tanggalLahir == null
@@ -234,28 +247,28 @@ class _TambahWargaPageState extends State<TambahWargaPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         _buildDropdown(
                             'Jenis Kelamin', _jenisKelamin, _listGender, (val) => setState(() => _jenisKelamin = val)),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         _buildDropdown(
                             'Agama', _agama, _listAgama, (val) => setState(() => _agama = val)),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         _buildDropdown('Golongan Darah', _golonganDarah, _listGolonganDarah,
                             (val) => setState(() => _golonganDarah = val)),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         _buildDropdown('Peran Keluarga', _peranKeluarga, _listPeran,
                             (val) => setState(() => _peranKeluarga = val)),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         _buildDropdown('Pendidikan Terakhir', _pendidikanTerakhir, _listPendidikan,
                             (val) => setState(() => _pendidikanTerakhir = val)),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         _buildDropdown('Pekerjaan', _pekerjaan, _listPekerjaan,
                             (val) => setState(() => _pekerjaan = val)),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12), // Jarak diperkecil
                         _buildDropdown('Status', _status, _listStatus,
                             (val) => setState(() => _status = val)),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 24), // Jarak diperkecil
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -265,33 +278,33 @@ class _TambahWargaPageState extends State<TambahWargaPage> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: _primaryColor,
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  padding: const EdgeInsets.symmetric(vertical: 12), // Padding diperkecil
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(10), // Radius diperkecil
                                   ),
-                                  elevation: 5,
+                                  elevation: 4, // Elevasi diperkecil
                                 ),
                                 child: const Text(
                                   'SIMPAN DATA',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // Font tombol diperkecil
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 20),
+                            const SizedBox(width: 16), // Jarak diperkecil
                             Expanded(
                               child: OutlinedButton(
                                 onPressed: _resetForm,
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: _primaryColor,
                                   side: const BorderSide(color: _primaryColor, width: 2),
-                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  padding: const EdgeInsets.symmetric(vertical: 12), // Padding diperkecil
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(10), // Radius diperkecil
                                   ),
                                 ),
                                 child: const Text(
                                   'RESET FORM',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // Font tombol diperkecil
                                 ),
                               ),
                             ),

@@ -12,9 +12,9 @@ class EditWargaPage extends StatefulWidget {
 class _EditWargaPageState extends State<EditWargaPage> {
   final _formKey = GlobalKey<FormState>();
 
-   // Warna kustom 
+  // Warna kustom 
   static const Color _primaryColor = Color(0xFF2E6BFF);
-  static const Color _accentColor = Color.fromARGB(255, 30, 76, 182);
+  // static const Color _accentColor = Color.fromARGB(255, 30, 76, 182); // Tidak digunakan, dihapus jika perlu
 
   // State variables, initialized in initState
   String? _nama;
@@ -133,9 +133,14 @@ class _EditWargaPageState extends State<EditWargaPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: const ColorScheme.light(
-              primary: _primaryColor, // Deep Purple
+              primary: _primaryColor, 
               onPrimary: Colors.white,
               onSurface: Colors.black87,
+            ),
+            textTheme: const TextTheme(
+              titleLarge: TextStyle(fontSize: 18), // Font header DatePicker diperkecil
+              labelLarge: TextStyle(fontSize: 14), // Font tombol DatePicker diperkecil
+              bodyLarge: TextStyle(fontSize: 14), // Font hari diperkecil
             ),
           ),
           child: child!,
@@ -155,45 +160,48 @@ class _EditWargaPageState extends State<EditWargaPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Data Warga ${_nama} Berhasil Diperbarui! ✅'),
+          content: Text('Data Warga ${_nama} Berhasil Diperbarui! ✅', style: const TextStyle(fontSize: 14)), // Font SnackBar diperkecil
           backgroundColor: _primaryColor,
         ),
       );
-      Navigator.pop(context); // Go back to previous screen
+      // Navigator.pop(context); // Go back to previous screen
     }
   }
 
-  // Helper function for Text Fields (dengan styling baru)
+  // Helper function for Text Fields (dengan penyesuaian font)
   Widget _buildTextField(
-    String label,
-    String hint,
-    Function(String?) onSaved, {
-    TextInputType keyboardType = TextInputType.text,
-    String? initialValue,
-    int? maxLength,
-    IconData? prefixIcon,
+      String label,
+      String hint,
+      Function(String?) onSaved, {
+      TextInputType keyboardType = TextInputType.text,
+      String? initialValue,
+      int? maxLength,
+      IconData? prefixIcon,
   }) {
     return TextFormField(
       initialValue: initialValue,
       maxLength: maxLength,
+      style: const TextStyle(fontSize: 14), // Font input field diperkecil
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: _primaryColor) : null,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), // Sudut membulat
+        labelStyle: const TextStyle(fontSize: 14, color: _primaryColor), // Font label diperkecil
+        hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade500), // Font hint diperkecil
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: _primaryColor, size: 20) : null, // Ukuran ikon diperkecil
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)), // Sudut membulat
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: _primaryColor, width: 2.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: Colors.grey.shade400, width: 1.0),
         ),
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16, // Diperlebar
-          vertical: 14,
+          horizontal: 14, // Diperkecil
+          vertical: 12, // Diperkecil
         ),
-        counterText: '', // Menghilangkan penghitung karakter
+        counterText: '', 
       ),
       keyboardType: keyboardType,
       validator: (value) {
@@ -212,38 +220,40 @@ class _EditWargaPageState extends State<EditWargaPage> {
     );
   }
 
-  // Helper function for Dropdown Fields (dengan styling baru)
+  // Helper function for Dropdown Fields (dengan penyesuaian font)
   Widget _buildDropdownField(
-    String label, {
-    required String hint,
-    required String? value,
-    required List<String> items,
-    required Function(String?) onChanged,
+      String label, {
+      required String hint,
+      required String? value,
+      required List<String> items,
+      required Function(String?) onChanged,
   }) {
     return DropdownButtonFormField<String>(
+      style: const TextStyle(fontSize: 14, color: Colors.black87), // Font nilai terpilih diperkecil
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        labelStyle: const TextStyle(color: _primaryColor),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        labelStyle: const TextStyle(color: _primaryColor, fontSize: 14), // Font label diperkecil
+        hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade500), // Font hint diperkecil
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)), // Sudut membulat
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: _primaryColor, width: 2.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: Colors.grey.shade400, width: 1.0),
         ),
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
+          horizontal: 14, // Diperkecil
+          vertical: 12, // Diperkecil
         ),
       ),
       value: value,
-      hint: Text(hint),
+      hint: Text(hint, style: TextStyle(fontSize: 14, color: Colors.grey.shade500)), // Font hint diperkecil
       isExpanded: true,
       items: items
-          .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+          .map((item) => DropdownMenuItem(value: item, child: Text(item, style: const TextStyle(fontSize: 14)))) // Font item diperkecil
           .toList(),
       onChanged: onChanged,
       validator: (value) {
@@ -259,14 +269,14 @@ class _EditWargaPageState extends State<EditWargaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Data Warga', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: _primaryColor, // Warna AppBar Deep Purple
-        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text('Edit Data Warga', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18)), // Font Title AppBar diperkecil
+        backgroundColor: _primaryColor, 
+        iconTheme: const IconThemeData(color: Colors.white, size: 22), // Ukuran ikon kembali diperkecil
         centerTitle: true,
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0), // Padding lebih besar
+          padding: const EdgeInsets.all(16.0), // Padding diperkecil
           child: Form(
             key: _formKey,
             child: ListView(
@@ -274,10 +284,10 @@ class _EditWargaPageState extends State<EditWargaPage> {
                 const Center(
                   child: Text(
                     'Perbarui Informasi Warga',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: _primaryColor),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _primaryColor), // Font heading diperkecil
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16), // Jarak diperkecil
 
                 // Nama Lengkap
                 _buildTextField(
@@ -287,7 +297,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   initialValue: _nama ?? '',
                   prefixIcon: Icons.person_outline,
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
 
                 // NIK
                 _buildTextField(
@@ -299,9 +309,9 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   maxLength: 16,
                   prefixIcon: Icons.credit_card,
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
 
-                // Keluarga (Dibiarkan sebagai TextField sesuai permintaan struktur)
+                // Keluarga 
                 _buildTextField(
                   'Keluarga',
                   'Masukkan Nama Kepala Keluarga',
@@ -309,7 +319,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   initialValue: _keluarga ?? '',
                   prefixIcon: Icons.family_restroom_outlined,
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
 
                 // Telepon
                 _buildTextField(
@@ -320,7 +330,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   initialValue: _telepon ?? '',
                   prefixIcon: Icons.phone_android,
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
 
                 // Tempat Lahir
                 _buildTextField(
@@ -330,24 +340,25 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   initialValue: _tempatLahir ?? '',
                   prefixIcon: Icons.location_city_outlined,
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
 
                 // Tanggal Lahir (dengan styling InputDecorator yang konsisten)
                 InputDecorator(
                   decoration: InputDecoration(
                     labelText: 'Tanggal Lahir',
                     hintText: 'Pilih tanggal lahir (dd/mm/yyyy)',
-                    labelStyle: const TextStyle(color: _primaryColor),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    labelStyle: const TextStyle(color: _primaryColor, fontSize: 14), // Font label diperkecil
+                    hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade500), // Font hint diperkecil
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)), // Sudut membulat
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: _primaryColor, width: 2.0),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(color: Colors.grey.shade400, width: 1.0),
                     ),
-                    contentPadding: const EdgeInsets.fromLTRB(16, 4, 4, 4),
+                    contentPadding: const EdgeInsets.fromLTRB(14, 4, 4, 4), // Padding disesuaikan
                   ),
                   child: InkWell(
                     onTap: () => _selectDate(context),
@@ -357,7 +368,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                         children: [
                           const Padding(
                             padding: EdgeInsets.only(right: 8.0),
-                            child: Icon(Icons.calendar_today, color: _primaryColor),
+                            child: Icon(Icons.calendar_today, color: _primaryColor, size: 20), // Ukuran ikon diperkecil
                           ),
                           Expanded(
                             child: Text(
@@ -365,14 +376,14 @@ class _EditWargaPageState extends State<EditWargaPage> {
                                   ? 'Pilih Tanggal Lahir'
                                   : '${_tanggalLahir!.day.toString().padLeft(2, '0')}/${_tanggalLahir!.month.toString().padLeft(2, '0')}/${_tanggalLahir!.year}',
                               style: TextStyle(
-                                fontSize: 16,
-                                color: _tanggalLahir == null ? Colors.grey[600] : Colors.black,
+                                fontSize: 14, // Font tanggal diperkecil
+                                color: _tanggalLahir == null ? Colors.grey.shade500 : Colors.black87,
                               ),
                             ),
                           ),
                           if (_tanggalLahir != null)
                             IconButton(
-                              icon: const Icon(Icons.close, size: 20),
+                              icon: const Icon(Icons.close, size: 18), // Ukuran ikon diperkecil
                               color: Colors.grey,
                               onPressed: () => setState(() => _tanggalLahir = null),
                             ),
@@ -381,7 +392,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
 
                 // Dropdowns
                 _buildDropdownField(
@@ -391,7 +402,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   items: _jenisKelaminOptions,
                   onChanged: (newValue) => setState(() => _selectedJenisKelamin = newValue),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
                 _buildDropdownField(
                   'Agama',
                   hint: '-- Pilih Agama --',
@@ -399,7 +410,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   items: _agamaOptions,
                   onChanged: (newValue) => setState(() => _selectedAgama = newValue),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
                 _buildDropdownField(
                   'Golongan Darah',
                   hint: '-- Pilih Golongan Darah --',
@@ -407,7 +418,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   items: _golonganDarahOptions,
                   onChanged: (newValue) => setState(() => _selectedGolonganDarah = newValue),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
                 _buildDropdownField(
                   'Peran Keluarga',
                   hint: '-- Pilih Peran Keluarga --',
@@ -415,7 +426,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   items: _peranKeluargaOptions,
                   onChanged: (newValue) => setState(() => _selectedPeranKeluarga = newValue),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
                 _buildDropdownField(
                   'Pendidikan Terakhir',
                   hint: '-- Pilih Pendidikan Terakhir --',
@@ -423,7 +434,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   items: _pendidikanOptions,
                   onChanged: (newValue) => setState(() => _selectedPendidikan = newValue),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
                 _buildDropdownField(
                   'Pekerjaan',
                   hint: '-- Pilih Jenis Pekerjaan --',
@@ -431,7 +442,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   items: _pekerjaanOptions,
                   onChanged: (newValue) => setState(() => _selectedPekerjaan = newValue),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0), // Jarak diperkecil
                 _buildDropdownField(
                   'Status',
                   hint: '-- Pilih Status --',
@@ -439,7 +450,7 @@ class _EditWargaPageState extends State<EditWargaPage> {
                   items: _statusOptions,
                   onChanged: (newValue) => setState(() => _selectedStatus = newValue),
                 ),
-                const SizedBox(height: 30.0),
+                const SizedBox(height: 24.0), // Jarak diperkecil
 
                 // Tombol Simpan dan Batal
                 Row(
@@ -451,28 +462,28 @@ class _EditWargaPageState extends State<EditWargaPage> {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: _primaryColor,
                           side: const BorderSide(color: _primaryColor, width: 2),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding: const EdgeInsets.symmetric(vertical: 12), // Padding diperkecil
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10), // Radius diperkecil
                           ),
                         ),
-                        child: const Text('BATAL', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        child: const Text('BATAL', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)), // Font tombol diperkecil
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 16), // Jarak diperkecil
                     Expanded(
                       child: ElevatedButton(
                         onPressed: _submitForm,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _primaryColor,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding: const EdgeInsets.symmetric(vertical: 12), // Padding diperkecil
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10), // Radius diperkecil
                           ),
-                          elevation: 5,
+                          elevation: 4, // Elevasi diperkecil
                         ),
-                        child: const Text('SIMPAN PERUBAHAN', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        child: const Text('SIMPAN PERUBAHAN', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)), // Font tombol diperkecil
                       ),
                     ),
                   ],
