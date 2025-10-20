@@ -6,6 +6,7 @@ import '../../widgets/home/feature_grid.dart';
 import '../../../widgets/bottom_nav_scaffold.dart';
 import 'analytics_page.dart';
 import 'search_page.dart';
+import 'profile_page.dart';
 import '../routes.dart';
 import '../../routes.dart';
 import '../../pages/warga_list_page.dart';
@@ -236,6 +237,12 @@ class _HomePageState extends State<HomePage> {
             onNotification: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Tidak ada notifikasi baru')),
+              );
+            },
+            onProfileTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
               );
             },
           ),
