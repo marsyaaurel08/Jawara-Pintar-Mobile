@@ -10,6 +10,7 @@ class DashboardHeader extends StatelessWidget {
   final String? name;
 
   final VoidCallback? onNotification;
+  final VoidCallback? onProfileTap;
 
   const DashboardHeader({
     super.key,
@@ -20,81 +21,119 @@ class DashboardHeader extends StatelessWidget {
     this.title,
     this.name,
     this.onNotification,
+    this.onProfileTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final textColor = Colors.black87;
     // Choose display values (prefer new fields, fallback to old ones)
     final displayTitle = title ?? greeting ?? 'Selamat datang';
     final displayName = name ?? subtitle ?? '';
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 23,
-            backgroundColor: Color(0xFFEEF4FF),
-            child: Icon(Icons.person, color: Color(0xFF2E6BFF)),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  displayTitle,
-                  style: TextStyle(
-                    color: textColor.withOpacity(0.9),
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  displayName,
-                  style: TextStyle(
-                    color: textColor.withOpacity(0.8),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Notification button with optional badge
-          Stack(
+      color: Colors.white,
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Row(
             children: [
-              IconButton(
-                onPressed: onNotification,
-                icon: const Icon(
-                  Icons.notifications_none,
-                  color: Color(0xFF2E6BFF),
+              // Avatar dengan gradient
+              GestureDetector(
+                onTap: onProfileTap,
+                child: Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 5, 117, 209),
+                        Color.fromARGB(255, 3, 95, 170),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(255, 5, 117, 209).withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.person_rounded,
+                    color: Colors.white,
+                    size: 28,
+                  ),
                 ),
               ),
-              // small red dot (example unread indicator)
-              Positioned(
-                right: 8,
-                top: 10,
+              const SizedBox(width: 14),
+              // Text greeting
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      displayTitle,
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      displayName,
+                      style: const TextStyle(
+                        color: Color(0xFF1A1A1A),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              // Notification Icon dengan badge
+              GestureDetector(
+                onTap: onNotification,
                 child: Container(
-                  width: 8,
-                  height: 8,
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.redAccent,
+                    color: Colors.grey.shade100,
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 1.5),
+                  ),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Icon(
+                        Icons.notifications_outlined,
+                        color: Colors.grey.shade700,
+                        size: 24,
+                      ),
+                      // Badge notifikasi
+                      Positioned(
+                        right: -2,
+                        top: -2,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
