@@ -18,15 +18,15 @@ class _FeatureGridState extends State<FeatureGrid> {
 
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-      padding: const EdgeInsets.fromLTRB(12, 14, 12, 8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -38,13 +38,13 @@ class _FeatureGridState extends State<FeatureGrid> {
             itemCount: shown.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
-              childAspectRatio: .63,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
+              childAspectRatio: 0.85,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 16,
             ),
             itemBuilder: (_, i) => _FeatureIcon(item: shown[i]),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           // subtle divider above the "Lainnya" button (reference style)
           Container(
             height: 1,
@@ -81,36 +81,35 @@ class _FeatureIcon extends StatelessWidget {
     return InkWell(
       onTap: item.onTap,
       borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              height: 54,
-              width: 54,
-              decoration: BoxDecoration(
-                color: item.bg.withOpacity(.15),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Icon(item.icon, color: item.bg),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            height: 52,
+            width: 52,
+            decoration: BoxDecoration(
+              color: item.bg.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(14),
             ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 32,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                child: Text(
-                  item.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ),
+            child: Icon(
+              item.icon,
+              color: item.bg,
+              size: 28,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            item.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              height: 1.2,
+            ),
+          ),
+        ],
       ),
     );
   }

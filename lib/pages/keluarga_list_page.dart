@@ -107,139 +107,89 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
     );
   }
 
-  // Widget untuk Detail Info pada Subtitle
-  Widget _buildDetailRow(IconData icon, String label, String text, {Color? color, bool isAccent = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 2.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 14, color: isAccent ? _primaryColor : Colors.grey.shade500),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: "$label: ",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: isAccent ? _primaryColor : Colors.grey.shade600,
-                        fontSize: _fontSizeSubtitle
-                    ),
-                  ),
-                  TextSpan(
-                    text: text,
-                    style: TextStyle(
-                        color: isAccent ? _primaryColor : Colors.grey.shade700,
-                        fontSize: _fontSizeSubtitle
-                    ),
-                  ),
-                ]
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Navigasi Aksi (Semua tipe data dan parameter diperbaiki)
-  void _handleAction(
-    String action,
-    KeluargaData keluarga, // Tipe data diubah menjadi KeluargaData
-    BuildContext context,
-  ) {
-    switch (action) {
-      case 'Detail':
-        // Navigasi ke DetailKeluargaPage. Asumsi DetailKeluargaPage menerima 'keluarga'
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailKeluargaPage(keluarga: keluarga),
-          ),
-        );
-        break;
-      case 'Edit':
-        // Navigasi ke EditKeluargaPage. Menggunakan parameter 'initialData'
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EditKeluargaPage(initialData: keluarga as dynamic), // cast to dynamic to avoid library-type mismatch
-          ),
-        );
-        break;
-      case 'Hapus':
-        _showDeleteConfirmation(context, keluarga);
-        break;
-    }
-  }
-
-  // Tampilkan konfirmasi hapus (Menggunakan KeluargaData)
-  void _showDeleteConfirmation(BuildContext context, KeluargaData keluarga) { // Tipe data diubah
-    showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Konfirmasi Hapus'),
-        content: Text(
-            'Anda yakin ingin menghapus data keluarga "${keluarga.namaKeluarga}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop(true);
-              setState(() {
-                // Hapus data dari list dummy
-                dummyKeluargaList.removeWhere((k) => k.no == keluarga.no);
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content:
-                        Text('Keluarga "${keluarga.namaKeluarga}" dihapus'),
-                    backgroundColor: _nonAktifColor,
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: _nonAktifColor, foregroundColor: Colors.white),
-            child: const Text('Hapus'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Tampilkan dialog filter (Tidak Berubah)
-  void _showFilterDialog(BuildContext context) async {
-    String? tempStatus = _selectedStatusFilter;
-    
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-          title: const Text('Filter Data Keluarga', style: TextStyle(color: _primaryColor)),
-          content: StatefulBuilder(
-            builder: (context, setStateSB) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Status Keluarga:', style: TextStyle(fontWeight: FontWeight.w600)),
-                  RadioListTile<String?>(
-                    title: const Text('Aktif'),
-                    value: 'Aktif',
-                    groupValue: tempStatus,
-                    onChanged: (String? value) =>
-                        setStateSB(() => tempStatus = value),
-                    dense: true,
-                    activeColor: _primaryColor,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      // appBar: PreferredSize(
+      //   preferredSize: const Size.fromHeight(80),
+      //   child: AppBar(
+      //     backgroundColor: const Color.fromARGB(255, 5, 117, 209),
+      //     elevation: 0,
+      //     automaticallyImplyLeading: false,
+      //     flexibleSpace: Container(
+      //       decoration: const BoxDecoration(
+      //         gradient: LinearGradient(
+      //           colors: [
+      //             Color.fromARGB(255, 5, 117, 209),
+      //             Color.fromARGB(255, 3, 95, 170),
+      //           ],
+      //           begin: Alignment.topLeft,
+      //           end: Alignment.bottomRight,
+      //         ),
+      //       ),
+      //       child: SafeArea(
+      //         child: Padding(
+      //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      //           child: Column(
+      //             mainAxisAlignment: MainAxisAlignment.center,
+      //             crossAxisAlignment: CrossAxisAlignment.start,
+      //             children: [
+      //               Row(
+      //                 children: [
+      //                   IconButton(
+      //                     icon: const Icon(Icons.arrow_back, color: Colors.white),
+      //                     onPressed: () => Navigator.pop(context),
+      //                   ),
+      //                   const SizedBox(width: 4),
+      //                   Container(
+      //                     padding: const EdgeInsets.all(8),
+      //                     decoration: BoxDecoration(
+      //                       color: Colors.white.withOpacity(0.2),
+      //                       borderRadius: BorderRadius.circular(10),
+      //                     ),
+      //                     child: const Icon(
+      //                       Icons.family_restroom_outlined,
+      //                       color: Colors.white,
+      //                       size: 24,
+      //                     ),
+      //                   ),
+      //                   const SizedBox(width: 12),
+      //                   const Text(
+      //                     'Daftar Keluarga',
+      //                     style: TextStyle(
+      //                       color: Colors.white,
+      //                       fontSize: 22,
+      //                       fontWeight: FontWeight.bold,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(12.0),
+        itemCount: dummyKeluargaList.length,
+        itemBuilder: (context, index) {
+          final keluarga = dummyKeluargaList[index];
+          
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Card(
+              elevation: 4, // Memberi kesan mendalam
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: ListTile(
+                // Leading: Nomor urut atau Icon
+                leading: CircleAvatar(
+                  backgroundColor: primaryColor,
+                  child: Text(
+                    keluarga.no.toString(),
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   RadioListTile<String?>(
                     title: const Text('Nonaktif'),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../pages/analytics_page.dart';
+import '../../pages/analytics_page.dart';
 
 /// SliderStatCard: compact analytics preview used on the Home page.
 class SliderStatCard extends StatefulWidget {
@@ -106,7 +106,6 @@ class _SliderStatCardState extends State<SliderStatCard> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
       height: 215,

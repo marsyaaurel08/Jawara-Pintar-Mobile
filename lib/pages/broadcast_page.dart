@@ -14,21 +14,28 @@ class _BroadcastPageState extends State<BroadcastPage> {
       pengirim: 'Admin',
       judul: 'Rapat Rutin Bulanan',
       tanggal: DateTime(2024, 1, 15),
-      isi: 'Rapat rutin bulanan akan dilaksanakan...',
+      isi: 'Rapat rutin bulanan akan dilaksanakan pada hari Sabtu, 20 Januari 2024 pukul 09.00 WIB di Balai RW. Agenda: evaluasi program bulan lalu dan perencanaan kegiatan mendatang.',
     ),
     Broadcast(
       id: '2',
       pengirim: 'Ketua RT',
       judul: 'Kerja Bakti Lingkungan',
       tanggal: DateTime(2024, 1, 10),
-      isi: 'Akan diadakan kerja bakti...',
+      isi: 'Akan diadakan kerja bakti membersihkan lingkungan sekitar pada Minggu, 21 Januari 2024 pukul 07.00 WIB. Mari bersama-sama menjaga kebersihan lingkungan.',
     ),
     Broadcast(
       id: '3',
       pengirim: 'Bendahara',
       judul: 'Iuran Bulan Januari',
       tanggal: DateTime(2024, 1, 5),
-      isi: 'Segera bayar iuran bulan Januari...',
+      isi: 'Segera bayar iuran bulan Januari 2024 paling lambat tanggal 10 Januari 2024. Pembayaran dapat dilakukan kepada bendahara atau melalui transfer ke rekening BCA 123-456-789.',
+    ),
+    Broadcast(
+      id: '4',
+      pengirim: 'Sekretaris',
+      judul: 'Pendataan Warga Baru',
+      tanggal: DateTime(2024, 1, 3),
+      isi: 'Bagi warga yang baru pindah atau memiliki anggota keluarga baru, harap melapor ke sekretariat untuk keperluan administrasi dan pendataan.',
     ),
   ];
 
@@ -138,10 +145,22 @@ class _BroadcastPageState extends State<BroadcastPage> {
               _buildDetailItem('Tanggal', 
                 '${broadcast.tanggal.day}/${broadcast.tanggal.month}/${broadcast.tanggal.year}'),
               _buildDetailItem('Judul', broadcast.judul),
+              const SizedBox(height: 12),
+              const Text('Isi Broadcast:',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               const SizedBox(height: 8),
-              const Text('Isi:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-              Text(broadcast.isi),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: Text(
+                  broadcast.isi,
+                  style: const TextStyle(fontSize: 14, height: 1.4),
+                ),
+              ),
             ],
           ),
         ),
@@ -157,7 +176,7 @@ class _BroadcastPageState extends State<BroadcastPage> {
 
   Widget _buildDetailItem(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -216,7 +235,7 @@ class _BroadcastPageState extends State<BroadcastPage> {
       pengirim: 'User Baru',
       judul: 'Broadcast Baru',
       tanggal: DateTime.now(),
-      isi: 'Ini adalah broadcast baru yang ditambahkan',
+      isi: 'Ini adalah broadcast baru yang ditambahkan melalui fitur tambah broadcast.',
     );
     
     setState(() {
@@ -229,147 +248,364 @@ class _BroadcastPageState extends State<BroadcastPage> {
     );
   }
 
+  void _showActionMenu(BuildContext context, Broadcast broadcast) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.visibility, color: Colors.blue),
+              title: const Text('Detail'),
+              onTap: () {
+                Navigator.pop(context);
+                _showDetailDialog(broadcast);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.edit, color: Colors.orange),
+              title: const Text('Edit'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Edit ${broadcast.judul}')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.red),
+              title: const Text('Hapus'),
+              onTap: () {
+                Navigator.pop(context);
+                _confirmDelete(broadcast);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Broadcast'),
-        backgroundColor: const Color(0xFF42A5F5),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80),
+        child: AppBar(
+          backgroundColor: const Color.fromARGB(255, 5, 117, 209),
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 5, 117, 209),
+                  Color.fromARGB(255, 3, 95, 170),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        const SizedBox(width: 4),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.campaign_outlined,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Broadcast',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       body: Column(
         children: [
-          // Search Bar
-          Padding(
+          // Search Bar, Filter, dan Tambah dalam satu baris
+          Container(
             padding: const EdgeInsets.all(16),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Cari judul broadcast...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() {
-                            _searchQuery = '';
-                          });
-                          _filterBroadcasts();
-                        },
-                      )
-                    : null,
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-                _filterBroadcasts();
-              },
-            ),
-          ),
-          
-          // Filter dan Tambah Button
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            color: Colors.grey[50],
             child: Row(
               children: [
-                // Filter Button
+                // Search Bar
                 Expanded(
-                  child: OutlinedButton.icon(
-                    icon: const Icon(Icons.filter_list),
-                    label: const Text('Filter'),
-                    onPressed: _showFilterDialog,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFF42A5F5),
-                      side: const BorderSide(color: Color(0xFF42A5F5)),
+                  flex: 2,
+                  child: Container(
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 2,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Cari judul broadcast...',
+                        prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        suffixIcon: _searchQuery.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.clear, size: 20),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  setState(() {
+                                    _searchQuery = '';
+                                  });
+                                  _filterBroadcasts();
+                                },
+                              )
+                            : null,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          _searchQuery = value;
+                        });
+                        _filterBroadcasts();
+                      },
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
+                
+                // Filter Button
+                Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 2,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.filter_list, color: Colors.grey),
+                    onPressed: _showFilterDialog,
+                  ),
+                ),
+                const SizedBox(width: 12),
                 
                 // Tambah Button
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.add),
-                    label: const Text('Tambah'),
+                Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF42A5F5),
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF42A5F5).withOpacity(0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.add, color: Colors.white),
                     onPressed: _addBroadcast,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF42A5F5),
-                    ),
                   ),
                 ),
               ],
             ),
           ),
           
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           
-          // Tabel Broadcast
+          // Daftar Broadcast dalam bentuk kartu
           Expanded(
             child: _filteredBroadcasts.isEmpty
-                ? const Center(
-                    child: Text('Tidak ada data broadcast'),
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.campaign_outlined,
+                          size: 64,
+                          color: Colors.grey[400],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Tidak ada data broadcast',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 : SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      headingRowColor: MaterialStateProperty.resolveWith(
-                        (states) => Colors.grey[100],
-                      ),
-                      columns: const [
-                        DataColumn(label: Text('No')),
-                        DataColumn(label: Text('Judul')),
-                        DataColumn(label: Text('Aksi')),
-                      ],
-                      rows: _filteredBroadcasts.asMap().entries.map((entry) {
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: _filteredBroadcasts.asMap().entries.map((entry) {
                         final index = entry.key;
                         final broadcast = entry.value;
-                        return DataRow(
-                          cells: [
-                            DataCell(Text('${index + 1}')),
-                            DataCell(
-                              Text(
-                                broadcast.judul,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
                               ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Nomor Urut
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF42A5F5).withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '${index + 1}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF42A5F5),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                
+                                // Informasi Broadcast
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        broadcast.judul,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Pengirim: ${broadcast.pengirim}',
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Tanggal: ${broadcast.tanggal.day}/${broadcast.tanggal.month}/${broadcast.tanggal.year}',
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                
+                                // Tombol Aksi (Titik Tiga)
+                                PopupMenuButton<String>(
+                                  icon: const Icon(Icons.more_vert, color: Colors.grey),
+                                  onSelected: (value) {
+                                    switch (value) {
+                                      case 'detail':
+                                        _showDetailDialog(broadcast);
+                                        break;
+                                      case 'edit':
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Edit ${broadcast.judul}')),
+                                        );
+                                        break;
+                                      case 'delete':
+                                        _confirmDelete(broadcast);
+                                        break;
+                                    }
+                                  },
+                                  itemBuilder: (BuildContext context) => [
+                                    const PopupMenuItem<String>(
+                                      value: 'detail',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.visibility, color: Colors.blue, size: 20),
+                                          SizedBox(width: 8),
+                                          Text('Detail'),
+                                        ],
+                                      ),
+                                    ),
+                                    const PopupMenuItem<String>(
+                                      value: 'edit',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.edit, color: Colors.orange, size: 20),
+                                          SizedBox(width: 8),
+                                          Text('Edit'),
+                                        ],
+                                      ),
+                                    ),
+                                    const PopupMenuItem<String>(
+                                      value: 'delete',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.delete, color: Colors.red, size: 20),
+                                          SizedBox(width: 8),
+                                          Text('Hapus'),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            DataCell(
-                              Row(
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.visibility,
-                                        size: 20),
-                                    color: Colors.blue,
-                                    onPressed: () =>
-                                        _showDetailDialog(broadcast),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.edit, size: 20),
-                                    color: Colors.orange,
-                                    onPressed: () {
-                                      // Navigasi ke halaman edit
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Edit ${broadcast.judul}')),
-                                      );
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete, size: 20),
-                                    color: Colors.red,
-                                    onPressed: () =>
-                                        _confirmDelete(broadcast),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         );
                       }).toList(),
                     ),
