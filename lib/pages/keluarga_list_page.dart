@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import '../pages/tambah_keluarga_page.dart'; 
-
-// Import file Anda yang sudah ada
+// Asumsi halaman detail dan edit juga sudah disesuaikan untuk menerima Map<String, dynamic>
 import '../pages/detail_keluarga_page.dart'; 
 import '../pages/edit_keluarga_page.dart'; 
-
-// CATATAN: Definisi KeluargaData sudah ada di sini, jadi tidak perlu import model terpisah
-// jika Anda memutuskan untuk menaruhnya di file ini.
 
 // Definisi Warna Kustom (Konsisten)
 const Color _primaryColor = Color(0xFF2E6BFF); // Biru Tua (Deep Blue)
@@ -15,36 +11,36 @@ const Color _backgroundColor = Color(0xFFF5F7FA); // Background soft light
 const Color _textColor = Color(0xFF37474F); // Abu-abu gelap (Deep Grey)
 const Color _nonAktifColor = Colors.red; // Merah untuk Nonaktif
 
-// Struktur Data Dummy (Tetap menggunakan KeluargaData)
-class KeluargaData {
-  final int no;
-  final String namaKeluarga;
-  final String kepalaKeluarga;
-  final String alamatRumah;
-  final String statusKepemilikan;
-  final String status; // Aktif/Nonaktif
-
-  KeluargaData({
-    required this.no,
-    required this.namaKeluarga,
-    required this.kepalaKeluarga,
-    required this.alamatRumah,
-    required this.statusKepemilikan,
-    required this.status,
-  });
-}
-
-// Menggunakan List yang dapat dimodifikasi (non-final) untuk simulasi hapus
-List<KeluargaData> dummyKeluargaList = [
-  KeluargaData(no: 1, namaKeluarga: 'Keluarga Farhan', kepalaKeluarga: 'Farhan', alamatRumah: 'Griyashanta L203', statusKepemilikan: 'Pemilik', status: 'Aktif'),
-  KeluargaData(no: 2, namaKeluarga: 'Keluarga Rendha Putra Rahmadya', kepalaKeluarga: 'Rendha Putra Rahmadya', alamatRumah: 'Malang', statusKepemilikan: 'Pemilik', status: 'Aktif'),
-  KeluargaData(no: 3, namaKeluarga: 'Keluarga Anti Micin', kepalaKeluarga: 'Anti Micin', alamatRumah: 'malang', statusKepemilikan: 'Penyewa', status: 'Aktif'),
-  KeluargaData(no: 4, namaKeluarga: 'Keluarga Varezky Naldiba Rimra', kepalaKeluarga: 'Varezky Naldiba Rimra', alamatRumah: 'i', statusKepemilikan: 'Pemilik', status: 'Aktif'),
-  KeluargaData(no: 5, namaKeluarga: 'Keluarga Lijat', kepalaKeluarga: 'Lijat', alamatRumah: 'Keluar Wilayah', statusKepemilikan: 'Penyewa', status: 'Nonaktif'),
-  KeluargaData(no: 6, namaKeluarga: 'Keluarga Raudhlil Firdaus Naufa', kepalaKeluarga: 'Raudhlil Firdaus Naufa', alamatRumah: 'Bogor Raya Permai F.J 2 no 11', statusKepemilikan: 'Pemilik', status: 'Aktif'),
-  KeluargaData(no: 7, namaKeluarga: 'Keluarga Mara Nunez', kepalaKeluarga: 'Mara Nunez', alamatRumah: 'malang', statusKepemilikan: 'Pemilik', status: 'Aktif'),
-  KeluargaData(no: 8, namaKeluarga: 'Keluarga Habibie Ed Dien', kepalaKeluarga: 'Habibie Ed Dien', alamatRumah: 'Blok A49', statusKepemilikan: 'Pemilik', status: 'Aktif'),
+// --- Data Dummy Keluarga (Menggunakan Map<String, dynamic>) ---
+// CATATAN: Dibuat final di luar class State agar menjadi sumber data awal.
+// Di dalam State, kita akan menggunakan salinannya agar bisa di-update.
+final List<Map<String, dynamic>> _initialKeluargaList = [
+  {
+    "no": 1,
+    "namaKeluarga": "Keluarga Farhan",
+    "kepalaKeluarga": "Farhan Kurniawan",
+    "alamatRumah": "Jl. Merbabu No. 12A, RT 001/RW 01",
+    "statusKepemilikan": "Pemilik",
+    "status": "Aktif",
+  },
+  {
+    "no": 2,
+    "namaKeluarga": "Keluarga Rendra",
+    "kepalaKeluarga": "Rendra Setyawan",
+    "alamatRumah": "Komplek Melati Blok C5, RT 003/RW 02",
+    "statusKepemilikan": "Penyewa",
+    "status": "Aktif",
+  },
+  {
+    "no": 3,
+    "namaKeluarga": "Keluarga Anti Micin",
+    "kepalaKeluarga": "Budi Setiawan",
+    "alamatRumah": "Perumahan Indah No. 44, RT 005/RW 03",
+    "statusKepemilikan": "Lainnya",
+    "status": "Nonaktif",
+  },
 ];
+// -------------------------------------------------------------
 
 class KeluargaListPage extends StatefulWidget {
   const KeluargaListPage({Key? key}) : super(key: key);
@@ -57,6 +53,9 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
   String _searchQuery = '';
   bool isFilterActive = false;
   String? _selectedStatusFilter;
+  
+  // List yang akan dimanipulasi (filter, edit, hapus)
+  List<Map<String, dynamic>> _currentKeluargaList = []; 
 
   // Ukuran Font Default untuk Mobile
   static const double _fontSizeTitle = 15.0;
@@ -65,17 +64,32 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
   static const double _cardPadding = 12.0; 
   static const double _fabBottomPadding = 80.0; 
 
-  // --- LOGIC FILTERING (Menggunakan KeluargaData) ---
-  List<KeluargaData> get _filteredKeluargaList {
-    return dummyKeluargaList.where((keluarga) {
+  @override
+  void initState() {
+    super.initState();
+    // Salin data dummy ke state saat initState
+    _currentKeluargaList = List.from(_initialKeluargaList);
+  }
+
+  // --- LOGIC FILTERING (Menggunakan Map<String, dynamic>) ---
+  // Ganti getter lama yang menggunakan KeluargaData
+  List<Map<String, dynamic>> get _filteredKeluargaList {
+    return _currentKeluargaList.where((keluarga) {
       final query = _searchQuery.toLowerCase();
-      final matchesSearch = keluarga.namaKeluarga.toLowerCase().contains(query) ||
-          keluarga.kepalaKeluarga.toLowerCase().contains(query) ||
-          keluarga.alamatRumah.toLowerCase().contains(query);
+      
+      // Ambil data dari Map. Gunakan `?? ''` untuk menghindari error jika key tidak ada.
+      final namaKeluarga = keluarga['namaKeluarga']?.toString().toLowerCase() ?? '';
+      final kepalaKeluarga = keluarga['kepalaKeluarga']?.toString().toLowerCase() ?? '';
+      final alamatRumah = keluarga['alamatRumah']?.toString().toLowerCase() ?? '';
+      final status = keluarga['status']?.toString() ?? '';
+
+      final matchesSearch = namaKeluarga.contains(query) ||
+          kepalaKeluarga.contains(query) ||
+          alamatRumah.contains(query);
 
       final matchesFilter = _selectedStatusFilter == null
           ? true
-          : keluarga.status == _selectedStatusFilter;
+          : status == _selectedStatusFilter;
 
       return matchesSearch && matchesFilter;
     }).toList();
@@ -88,7 +102,7 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
     });
   }
 
-  // --- WIDGET HELPER (Tidak Berubah) ---
+  // --- WIDGET HELPER ---
 
   // Widget untuk Badge Status
   Widget _buildStatusBadge(String status) {
@@ -146,15 +160,15 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
     );
   }
 
-  // Navigasi Aksi (Semua tipe data dan parameter diperbaiki)
+  // Navigasi Aksi (Semua tipe data dan parameter diperbaiki ke Map<String, dynamic>)
   void _handleAction(
     String action,
-    KeluargaData keluarga, // Tipe data diubah menjadi KeluargaData
+    Map<String, dynamic> keluarga, // TIPE DATA DIPERBAIKI
     BuildContext context,
-  ) {
+  ) async { // Tambahkan async untuk menerima hasil update dari EditPage
     switch (action) {
       case 'Detail':
-        // Navigasi ke DetailKeluargaPage. Asumsi DetailKeluargaPage menerima 'keluarga'
+        // Navigasi ke DetailKeluargaPage. Asumsi DetailKeluargaPage menerima Map
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -163,13 +177,24 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
         );
         break;
       case 'Edit':
-        // Navigasi ke EditKeluargaPage. Menggunakan parameter 'initialData'
-        Navigator.push(
+        // Navigasi ke EditKeluargaPage. Meneruskan Map
+        final updatedData = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => EditKeluargaPage(initialData: keluarga as dynamic), // cast to dynamic to avoid library-type mismatch
+            builder: (context) => EditKeluargaPage(initialData: keluarga),
           ),
         );
+        
+        // Update list jika ada data yang dikembalikan (Map baru)
+        if (updatedData != null && updatedData is Map<String, dynamic>) {
+          setState(() {
+            // Temukan index berdasarkan 'no' atau 'id'
+            final index = _currentKeluargaList.indexWhere((k) => k['no'] == updatedData['no']);
+            if (index != -1) {
+              _currentKeluargaList[index] = updatedData;
+            }
+          });
+        }
         break;
       case 'Hapus':
         _showDeleteConfirmation(context, keluarga);
@@ -177,14 +202,15 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
     }
   }
 
-  // Tampilkan konfirmasi hapus (Menggunakan KeluargaData)
-  void _showDeleteConfirmation(BuildContext context, KeluargaData keluarga) { // Tipe data diubah
+  // Tampilkan konfirmasi hapus (Menggunakan Map<String, dynamic>)
+  void _showDeleteConfirmation(BuildContext context, Map<String, dynamic> keluarga) { // TIPE DATA DIPERBAIKI
     showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Konfirmasi Hapus'),
+        // Ambil data dari Map
         content: Text(
-            'Anda yakin ingin menghapus data keluarga "${keluarga.namaKeluarga}"?'),
+            'Anda yakin ingin menghapus data keluarga "${keluarga['namaKeluarga'] ?? 'ini'}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -194,13 +220,13 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
             onPressed: () {
               Navigator.of(context).pop(true);
               setState(() {
-                // Hapus data dari list dummy
-                dummyKeluargaList.removeWhere((k) => k.no == keluarga.no);
+                // Hapus data dari list berdasarkan 'no'
+                _currentKeluargaList.removeWhere((k) => k['no'] == keluarga['no']);
               });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                     content:
-                        Text('Keluarga "${keluarga.namaKeluarga}" dihapus'),
+                        Text('Keluarga "${keluarga['namaKeluarga'] ?? 'ini'}" dihapus'),
                     backgroundColor: _nonAktifColor,
                 ),
               );
@@ -214,7 +240,7 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
     );
   }
 
-  // Tampilkan dialog filter (Tidak Berubah)
+  // Tampilkan dialog filter (Tidak Berubah, hanya logikanya bekerja pada Map)
   void _showFilterDialog(BuildContext context) async {
     String? tempStatus = _selectedStatusFilter;
     
@@ -287,8 +313,14 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
     }
   }
 
-  // WIDGET: Card untuk setiap item keluarga (Menggunakan KeluargaData)
-  Widget _buildKeluargaCard(KeluargaData keluarga, BuildContext context) { // Tipe data diubah
+  // WIDGET: Card untuk setiap item keluarga (Menggunakan Map<String, dynamic>)
+  Widget _buildKeluargaCard(Map<String, dynamic> keluarga, BuildContext context) { // TIPE DATA DIPERBAIKI
+    final namaKeluarga = keluarga['namaKeluarga'] ?? '-';
+    final kepalaKeluarga = keluarga['kepalaKeluarga'] ?? '-';
+    final alamatRumah = keluarga['alamatRumah'] ?? '-';
+    final statusKepemilikan = keluarga['statusKepemilikan'] ?? '-';
+    final status = keluarga['status'] ?? 'N/A';
+    
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 6, 
@@ -323,7 +355,7 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
                   children: [
                     // Title: Nama Keluarga
                     Text(
-                      keluarga.namaKeluarga,
+                      namaKeluarga,
                       style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: _fontSizeTitle + 1, 
@@ -335,31 +367,31 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
                     
                     // Subtitle: Informasi Detail
                     _buildDetailRow(
-                        Icons.person_outline, "Kepala", keluarga.kepalaKeluarga),
+                        Icons.person_outline, "Kepala", kepalaKeluarga),
                     _buildDetailRow(
-                        Icons.location_on_outlined, "Alamat", keluarga.alamatRumah),
+                        Icons.location_on_outlined, "Alamat", alamatRumah),
                     const SizedBox(height: 4),
                     
                     // Status Kepemilikan (Highlight)
                     _buildDetailRow(Icons.account_balance_wallet_outlined,
-                        "Kepemilikan", keluarga.statusKepemilikan,
+                        "Kepemilikan", statusKepemilikan,
                         isAccent: true),
                     
                     // Badge Status
                     const SizedBox(height: 8),
-                    _buildStatusBadge(keluarga.status),
+                    _buildStatusBadge(status),
                   ],
                 ),
               ),
 
-              // --- TRAILING: Ikon Edit dan Hapus (Pengganti Titik Tiga) ---
+              // --- TRAILING: Ikon Edit dan Hapus ---
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Icon Edit
                   IconButton(
                     icon: const Icon(
-                      Icons.edit_note_rounded, // Ikon edit dengan pena
+                      Icons.edit_note_rounded, 
                       color: _primaryColor,
                       size: 26,
                     ),
@@ -369,7 +401,7 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
                   // Icon Hapus
                   IconButton(
                     icon: const Icon(
-                      Icons.delete_forever_rounded, // Ikon hapus yang tegas
+                      Icons.delete_forever_rounded, 
                       color: Colors.red,
                       size: 26,
                     ),
@@ -386,7 +418,7 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
   }
 
   // --------------------------------------------------------------------------
-  // --- WIDGET UTAMA: BUILD (Tidak Berubah) ---
+  // --- WIDGET UTAMA: BUILD ---
   // --------------------------------------------------------------------------
 
   @override
@@ -508,6 +540,7 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
                     padding: EdgeInsets.only(top: 8.0, bottom: _fabBottomPadding), 
                     itemCount: _filteredKeluargaList.length,
                     itemBuilder: (context, index) {
+                      // Ambil Map untuk item saat ini
                       final keluarga = _filteredKeluargaList[index];
                       return _buildKeluargaCard(keluarga, context);
                     },
@@ -516,9 +549,10 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
         ],
       ),
 
-      // Floating Action Button KOTAK (Navigasi ke TambahKeluargaPage)
+      // Floating Action Button
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          // Navigasi ke TambahKeluargaPage
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const TambahKeluargaPage()),

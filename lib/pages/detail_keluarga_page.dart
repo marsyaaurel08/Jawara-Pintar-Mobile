@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; 
+import 'package:intl/intl.dart'; // Tetap dipertahankan meskipun tidak digunakan untuk data dummy ini
 import '../../pages/keluarga_list_page.dart';
+import '../../pages/edit_keluarga_page.dart'; // Hanya untuk referensi path, tidak perlu import data
 
-// Definisi Warna Kustom (Konsisten dengan List Page)
+// Definisi Warna Kustom (Konsisten)
 const Color _primaryColor = Color(0xFF2E6BFF); // Biru Tua
 const Color _secondaryColor = Color(0xFF00C853); // Hijau untuk Aktif
 const Color _backgroundColor = Color(0xFFF5F7FA); // Background soft light
@@ -11,8 +12,10 @@ const Color _nonAktifColor = Colors.red; // Merah untuk Nonaktif
 const Color _accentColor = Color(0xFFFFB300); // Kuning/Orange untuk Aksen
 
 class DetailKeluargaPage extends StatelessWidget {
-  final KeluargaData keluarga;
+  // Ganti tipe data dari KeluargaData menjadi Map<String, dynamic>
+  final Map<String, dynamic> keluarga; 
 
+  // Sesuaikan constructor
   const DetailKeluargaPage({Key? key, required this.keluarga}) : super(key: key);
 
   // Widget Pembantu untuk Badge Status
@@ -91,6 +94,14 @@ class DetailKeluargaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ambil data dari Map. Gunakan `??` untuk fallback nilai jika null.
+    final namaKeluarga = keluarga['namaKeluarga']?.toString() ?? 'Nama Keluarga Tidak Ditemukan';
+    final status = keluarga['status']?.toString() ?? 'N/A';
+    final kepalaKeluarga = keluarga['kepalaKeluarga']?.toString() ?? '-';
+    final alamatRumah = keluarga['alamatRumah']?.toString() ?? '-';
+    final statusKepemilikan = keluarga['statusKepemilikan']?.toString() ?? '-';
+    final noUrut = keluarga['no']?.toString() ?? '0'; // Pastikan 'no' adalah key yang benar
+
     return Scaffold(
       backgroundColor: _backgroundColor,
       appBar: AppBar(
@@ -118,7 +129,7 @@ class DetailKeluargaPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        keluarga.namaKeluarga,
+                        namaKeluarga, // Akses data dari variabel lokal (Map)
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w900,
@@ -126,7 +137,7 @@ class DetailKeluargaPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      _buildStatusBadge(keluarga.status),
+                      _buildStatusBadge(status), // Akses data dari variabel lokal (Map)
                     ],
                   ),
                 ),
@@ -149,86 +160,33 @@ class DetailKeluargaPage extends StatelessWidget {
             _buildDetailCard(
               Icons.person_outline, 
               'Kepala Keluarga', 
-              keluarga.kepalaKeluarga, 
+              kepalaKeluarga, // Akses data dari variabel lokal (Map)
               isPrimary: true
             ),
 
             _buildDetailCard(
               Icons.location_on_outlined, 
               'Alamat Rumah', 
-              keluarga.alamatRumah
+              alamatRumah // Akses data dari variabel lokal (Map)
             ),
 
             _buildDetailCard(
               Icons.home_work_outlined, 
               'Status Kepemilikan', 
-              keluarga.statusKepemilikan
+              statusKepemilikan // Akses data dari variabel lokal (Map)
             ),
             
             _buildDetailCard(
               Icons.format_list_numbered, 
               'Nomor Urut', 
-              keluarga.no.toString()
+              noUrut // Akses data dari variabel lokal (Map)
             ),
             
             const SizedBox(height: 20),
 
             // Bagian Aksi Cepat
-            const Text(
-              'Aksi Cepat',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: _textColor,
-              ),
-            ),
-            const SizedBox(height: 10),
+            //const SizedBox(height: 10),
 
-            Row(
-              children: [
-                // Tombol Edit
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      // TODO: Implementasi navigasi ke EditKeluargaPage
-                      // Anda mungkin perlu memanggil fungsi dari KeluargaListPage 
-                      // atau mengimplementasikan navigasi di sini.
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Tekan tombol edit di List untuk mengedit data.')),
-                      );
-                    },
-                    icon: const Icon(Icons.edit, size: 20),
-                    label: const Text('Edit Data'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _accentColor,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 15),
-                // Tombol Hapus
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      // TODO: Implementasi konfirmasi hapus
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Tekan tombol hapus di List untuk menghapus data.')),
-                      );
-                    },
-                    icon: const Icon(Icons.delete, size: 20),
-                    label: const Text('Hapus Data'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: _nonAktifColor,
-                      side: const BorderSide(color: _nonAktifColor, width: 2),
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),

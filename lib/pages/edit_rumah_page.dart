@@ -339,7 +339,7 @@ class _EditRumahPageState extends State<EditRumahPage> {
                               onPressed: _submitForm,
                               icon: const Icon(Icons.save_outlined),
                               label: const Text(
-                                'UPDATE RUMAH',
+                                'SIMPAN PERUBAHAN',
                                 style: TextStyle(fontSize: _fontSizeDefault, fontWeight: FontWeight.bold),
                               ),
                               style: ElevatedButton.styleFrom(
@@ -358,7 +358,7 @@ class _EditRumahPageState extends State<EditRumahPage> {
                               onPressed: _resetForm,
                               icon: const Icon(Icons.refresh_outlined),
                               label: const Text(
-                                'KEMBALIKAN KE AWAL',
+                                'RESET',
                                 style: TextStyle(fontSize: _fontSizeDefault, fontWeight: FontWeight.bold),
                               ),
                               style: OutlinedButton.styleFrom(

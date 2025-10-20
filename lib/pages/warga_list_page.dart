@@ -14,8 +14,12 @@ class WargaListPage extends StatefulWidget {
 class _WargaListPageState extends State<WargaListPage> {
   // Warna kustom Deep Purple untuk konsistensi
   static const Color _primaryColor = Color(0xFF2E6BFF);
-  static const Color _accentColor = Color(0xFF00C853); // Hijau untuk status Aktif/Hidup
-  static const Color _warningColor = Color(0xFFFF9800); // Orange untuk Nonaktif/Istri/Anak
+  static const Color _accentColor = Color(
+    0xFF00C853,
+  ); // Hijau untuk status Aktif/Hidup
+  static const Color _warningColor = Color(
+    0xFFFF9800,
+  ); // Orange untuk Nonaktif/Istri/Anak
 
   // --- Data Warga DILENGKAPI dengan detail Tambahan ---
   final List<Map<String, dynamic>> _allWargaList = [
@@ -93,24 +97,34 @@ class _WargaListPageState extends State<WargaListPage> {
 
   // --- Filter Options (for the Dialog) ---
   final List<String> _jenisKelaminOptions = ['Laki-laki', 'Perempuan'];
-  final List<String> _statusOptions = ['Hidup', 'Meninggal']; // Options for status filter
-  List<String> get _keluargaOptions =>
-      _allWargaList.map((warga) => warga['keluarga'] as String).toSet().toList();
+  final List<String> _statusOptions = [
+    'Hidup',
+    'Meninggal',
+  ]; // Options for status filter
+  List<String> get _keluargaOptions => _allWargaList
+      .map((warga) => warga['keluarga'] as String)
+      .toSet()
+      .toList();
 
   // --- Computed List for Display (with search and all filters) ---
   List<Map<String, dynamic>> get _filteredWargaList {
     return _allWargaList.where((warga) {
-      final matchesSearch = warga['nama']
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase()) ||
+      final matchesSearch =
+          warga['nama'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
           warga['nik'].contains(_searchQuery);
 
       final matchesJenisKelamin =
-          _selectedJenisKelamin == null || warga['jenisKelamin'] == _selectedJenisKelamin;
-      final matchesStatus = _selectedStatus == null || warga['status'] == _selectedStatus;
-      final matchesKeluarga = _selectedKeluarga == null || warga['keluarga'] == _selectedKeluarga;
+          _selectedJenisKelamin == null ||
+          warga['jenisKelamin'] == _selectedJenisKelamin;
+      final matchesStatus =
+          _selectedStatus == null || warga['status'] == _selectedStatus;
+      final matchesKeluarga =
+          _selectedKeluarga == null || warga['keluarga'] == _selectedKeluarga;
 
-      return matchesSearch && matchesJenisKelamin && matchesStatus && matchesKeluarga;
+      return matchesSearch &&
+          matchesJenisKelamin &&
+          matchesStatus &&
+          matchesKeluarga;
     }).toList();
   }
 
@@ -132,8 +146,7 @@ class _WargaListPageState extends State<WargaListPage> {
   void _navigateToEditPage(BuildContext context, Map<String, dynamic> warga) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => EditWargaPage(wargaData: warga)),
+      MaterialPageRoute(builder: (context) => EditWargaPage(wargaData: warga)),
     );
   }
 
@@ -151,23 +164,44 @@ class _WargaListPageState extends State<WargaListPage> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: const Text('Filter Data Warga', style: TextStyle(color: _primaryColor, fontWeight: FontWeight.bold, fontSize: 17)),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              title: const Text(
+                'Filter Data Warga',
+                style: TextStyle(
+                  color: _primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     _buildFilterDropdown(
-                        setDialogState, 'Jenis Kelamin', tempJenisKelamin, _jenisKelaminOptions,
-                        (newValue) => tempJenisKelamin = newValue),
+                      setDialogState,
+                      'Jenis Kelamin',
+                      tempJenisKelamin,
+                      _jenisKelaminOptions,
+                      (newValue) => tempJenisKelamin = newValue,
+                    ),
                     const SizedBox(height: 12),
                     _buildFilterDropdown(
-                        setDialogState, 'Status Kehidupan', tempStatus, _statusOptions,
-                        (newValue) => tempStatus = newValue),
+                      setDialogState,
+                      'Status Kehidupan',
+                      tempStatus,
+                      _statusOptions,
+                      (newValue) => tempStatus = newValue,
+                    ),
                     const SizedBox(height: 12),
                     _buildFilterDropdown(
-                        setDialogState, 'Keluarga', tempKeluarga, _keluargaOptions,
-                        (newValue) => tempKeluarga = newValue),
+                      setDialogState,
+                      'Keluarga',
+                      tempKeluarga,
+                      _keluargaOptions,
+                      (newValue) => tempKeluarga = newValue,
+                    ),
                   ],
                 ),
               ),
@@ -180,13 +214,19 @@ class _WargaListPageState extends State<WargaListPage> {
                       tempKeluarga = null;
                     });
                   },
-                  child: const Text('Reset', style: TextStyle(color: Colors.grey, fontSize: 14)),
+                  child: const Text(
+                    'Reset',
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primaryColor,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                   ),
                   onPressed: () {
                     setState(() {
@@ -196,7 +236,10 @@ class _WargaListPageState extends State<WargaListPage> {
                     });
                     Navigator.of(context).pop();
                   },
-                  child: const Text('TERAPKAN FILTER', style: TextStyle(fontSize: 14)),
+                  child: const Text(
+                    'TERAPKAN FILTER',
+                    style: TextStyle(fontSize: 14),
+                  ),
                 ),
               ],
             );
@@ -207,16 +250,20 @@ class _WargaListPageState extends State<WargaListPage> {
   }
 
   Widget _buildFilterDropdown(
-      StateSetter setDialogState,
-      String label,
-      String? currentValue,
-      List<String> items,
-      Function(String?) onValueChange) {
+    StateSetter setDialogState,
+    String label,
+    String? currentValue,
+    List<String> items,
+    Function(String?) onValueChange,
+  ) {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: _primaryColor, fontSize: 14),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 12,
+        ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -227,7 +274,12 @@ class _WargaListPageState extends State<WargaListPage> {
       hint: Text('-- Pilih $label --', style: const TextStyle(fontSize: 14)),
       isExpanded: true,
       items: items
-          .map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(fontSize: 14))))
+          .map(
+            (e) => DropdownMenuItem(
+              value: e,
+              child: Text(e, style: const TextStyle(fontSize: 14)),
+            ),
+          )
           .toList(),
       onChanged: (String? newValue) {
         setDialogState(() {
@@ -258,9 +310,42 @@ class _WargaListPageState extends State<WargaListPage> {
     );
   }
 
+  // --- FUNCTION: Hapus Data Warga dengan Konfirmasi ---
+  void _onDeleteRumah(Map<String, dynamic> warga) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Hapus'),
+          content: Text('Yakin ingin menghapus data "${warga['nama']}"?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _primaryColor,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                setState(() {
+                  _allWargaList.remove(warga);
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text('Hapus'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool isFilterActive = _selectedJenisKelamin != null ||
+    final bool isFilterActive =
+        _selectedJenisKelamin != null ||
         _selectedStatus != null ||
         _selectedKeluarga != null;
 
@@ -269,7 +354,10 @@ class _WargaListPageState extends State<WargaListPage> {
         backgroundColor: _primaryColor,
         foregroundColor: Colors.white,
         elevation: 4,
-        title: const Text('Data Warga', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+        title: const Text(
+          'Data Warga',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
       ),
       body: Column(
         children: [
@@ -289,15 +377,21 @@ class _WargaListPageState extends State<WargaListPage> {
                     decoration: InputDecoration(
                       hintText: 'Cari nama atau NIK...',
                       hintStyle: const TextStyle(fontSize: 14),
-                      prefixIcon: const Icon(Icons.search, color: _primaryColor, size: 20),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: _primaryColor,
+                        size: 20,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
                       fillColor: _primaryColor.withOpacity(0.05),
-                      contentPadding:
-                          const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 12,
+                      ),
                     ),
                   ),
                 ),
@@ -331,8 +425,15 @@ class _WargaListPageState extends State<WargaListPage> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: ActionChip(
-                  avatar: const Icon(Icons.close, color: _primaryColor, size: 16),
-                  label: const Text('Hapus Filter', style: TextStyle(color: _primaryColor, fontSize: 13)),
+                  avatar: const Icon(
+                    Icons.close,
+                    color: _primaryColor,
+                    size: 16,
+                  ),
+                  label: const Text(
+                    'Hapus Filter',
+                    style: TextStyle(color: _primaryColor, fontSize: 13),
+                  ),
                   onPressed: () {
                     setState(() {
                       _selectedJenisKelamin = null;
@@ -342,7 +443,10 @@ class _WargaListPageState extends State<WargaListPage> {
                   },
                   backgroundColor: _primaryColor.withOpacity(0.1),
                   side: const BorderSide(color: _primaryColor),
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
                 ),
               ),
             ),
@@ -367,34 +471,43 @@ class _WargaListPageState extends State<WargaListPage> {
                       final statusIsHidup = warga['status'] == 'Hidup';
                       final domisiliIsAktif = warga['domisili'] == 'Aktif';
 
-                      final statusColor = statusIsHidup ? _accentColor : Colors.red.shade700;
-                      final domisiliColor = domisiliIsAktif ? Colors.blue.shade700 : _warningColor;
-                      
+                      final statusColor = statusIsHidup
+                          ? _accentColor
+                          : Colors.red.shade700;
+                      final domisiliColor = domisiliIsAktif
+                          ? Colors.blue.shade700
+                          : _warningColor;
+
                       // Ikon ini yang Dihapus/Diganti:
-                      // final genderIcon = warga['jenisKelamin'] == 'Laki-laki' 
-                      //     ? Icons.male 
+                      // final genderIcon = warga['jenisKelamin'] == 'Laki-laki'
+                      //     ? Icons.male
                       //     : Icons.female;
 
                       return Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
                         elevation: 5,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: InkWell(
-                          onTap: () => _showDetailWarga(context, warga), 
+                          onTap: () => _showDetailWarga(context, warga),
                           borderRadius: BorderRadius.circular(15),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: ListTile(
                               // --- LEADING: Ikon Profil/Avatar Generik ---
                               leading: CircleAvatar(
-                                radius: 24, 
+                                radius: 24,
                                 backgroundColor: _primaryColor.withOpacity(0.1),
                                 child: const Icon(
-                                    Icons.person_pin, // Mengganti ikon gender dengan ikon profile
-                                    color: _primaryColor, 
-                                    size: 32 // Dibuat sedikit lebih besar agar menonjol
+                                  Icons
+                                      .person_pin, // Mengganti ikon gender dengan ikon profile
+                                  color: _primaryColor,
+                                  size:
+                                      32, // Dibuat sedikit lebih besar agar menonjol
                                 ),
                               ),
 
@@ -403,7 +516,7 @@ class _WargaListPageState extends State<WargaListPage> {
                                 warga['nama'],
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w900,
-                                  fontSize: 16, 
+                                  fontSize: 16,
                                   color: Colors.black87,
                                 ),
                                 overflow: TextOverflow.ellipsis,
@@ -418,11 +531,18 @@ class _WargaListPageState extends State<WargaListPage> {
                                   // NIK & Keluarga
                                   Row(
                                     children: [
-                                      const Icon(Icons.credit_card, size: 14, color: Colors.grey),
+                                      const Icon(
+                                        Icons.credit_card,
+                                        size: 14,
+                                        color: Colors.grey,
+                                      ),
                                       const SizedBox(width: 5),
                                       Text(
                                         "NIK: ${warga['nik']}",
-                                        style: const TextStyle(color: Colors.black54, fontSize: 12),
+                                        style: const TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -430,12 +550,19 @@ class _WargaListPageState extends State<WargaListPage> {
                                   // Keluarga & Peran
                                   Row(
                                     children: [
-                                      const Icon(Icons.groups, size: 14, color: Colors.grey),
+                                      const Icon(
+                                        Icons.groups,
+                                        size: 14,
+                                        color: Colors.grey,
+                                      ),
                                       const SizedBox(width: 5),
                                       Expanded(
                                         child: Text(
                                           "${warga['keluarga']} (${warga['peranKeluarga']})",
-                                          style: const TextStyle(color: Colors.black54, fontSize: 12),
+                                          style: const TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 12,
+                                          ),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
@@ -446,19 +573,48 @@ class _WargaListPageState extends State<WargaListPage> {
                                   // Status Badges
                                   Row(
                                     children: [
-                                      _buildStatusBadge(warga['domisili'], domisiliColor),
+                                      _buildStatusBadge(
+                                        warga['domisili'],
+                                        domisiliColor,
+                                      ),
                                       const SizedBox(width: 8),
-                                      _buildStatusBadge(warga['status'], statusColor),
+                                      _buildStatusBadge(
+                                        warga['status'],
+                                        statusColor,
+                                      ),
                                     ],
                                   ),
                                 ],
                               ),
 
                               // --- TRAILING: Tombol Aksi (Edit) ---
-                              trailing: IconButton(
-                                icon: const Icon(Icons.edit_note, color: _primaryColor, size: 28), 
-                                onPressed: () => _navigateToEditPage(context, warga), 
-                                tooltip: 'Edit Data Warga',
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // Icon Edit
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons
+                                          .edit_note_rounded, // Ikon edit dengan pena
+                                      color: _primaryColor,
+                                      size: 26,
+                                    ),
+                                    onPressed: () =>
+                                        _navigateToEditPage(context, warga),
+                                    tooltip: 'Edit Data Warga',
+                                  ),
+                                  // Icon Hapus
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons
+                                          .delete_forever_rounded, // Ikon hapus yang tegas
+                                      color: Colors.red,
+                                      size: 26,
+                                    ),
+                                    onPressed: () => _onDeleteRumah(warga),
+                                    tooltip: 'Hapus Data Rumah',
+                                  ),
+                                ],
                               ),
                             ),
                           ),
