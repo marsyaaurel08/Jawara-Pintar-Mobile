@@ -195,42 +195,69 @@ class _AspirasiPageState extends State<AspirasiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      body: Column(
-        children: [
-          // Header dengan background biru muda
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(
-              top: 60.0,
-              bottom: 16.0,
-              left: 16.0,
-              right: 16.0,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.lightBlue.shade50, 
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(16),
-                bottomRight: Radius.circular(16),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80),
+        child: AppBar(
+          backgroundColor: const Color.fromARGB(255, 5, 117, 209),
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 5, 117, 209),
+                  Color.fromARGB(255, 3, 95, 170),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.pop(context),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        const SizedBox(width: 4),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.feedback_outlined,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Aspirasi',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Aspirasi',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-
+        ),
+      ),
+      body: Column(
+        children: [
           // Search bar dan filter
           Padding(
             padding: const EdgeInsets.all(16.0),

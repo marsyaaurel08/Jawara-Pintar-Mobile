@@ -25,56 +25,59 @@ class BottomNavScaffold extends StatelessWidget {
 
     return Scaffold(
       body: body,
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: PhysicalModel(
-            color: Colors.transparent,
-            elevation: 2,
-            borderRadius: BorderRadius.circular(20),
-            shadowColor: Colors.black12,
-            child: Container(
-              height: 78,
-              decoration: BoxDecoration(
-                color: bgColor,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _flatNavItem(
-                    context,
-                    icon: Icons.home_outlined,
-                    label: 'Beranda',
-                    index: 0,
-                    activeColor: primary,
-                  ),
-                  _flatNavItem(
-                    context,
-                    icon: Icons.menu_book_outlined,
-                    label: 'Kependudukan',
-                    index: 1,
-                    activeColor: primary,
-                    labelWidth: 96,
-                  ),
-                  _flatNavItem(
-                    context,
-                    icon: Icons.schedule_outlined,
-                    label: 'Keuangan',
-                    index: 2,
-                    activeColor: primary,
-                  ),
-                  _flatNavItem(
-                    context,
-                    icon: Icons.event_outlined,
-                    label: 'Analitik',
-                    index: 3,
-                    activeColor: primary,
-                  ),
-                ],
-              ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          top: false,
+          child: SizedBox(
+            height: 78,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _flatNavItem(
+                  context,
+                  icon: Icons.home_outlined,
+                  label: 'Beranda',
+                  index: 0,
+                  activeColor: primary,
+                ),
+                _flatNavItem(
+                  context,
+                  icon: Icons.menu_book_outlined,
+                  label: 'Kependudukan',
+                  index: 1,
+                  activeColor: primary,
+                  labelWidth: 96,
+                ),
+                _flatNavItem(
+                  context,
+                  icon: Icons.schedule_outlined,
+                  label: 'Keuangan',
+                  index: 2,
+                  activeColor: primary,
+                ),
+                _flatNavItem(
+                  context,
+                  icon: Icons.event_outlined,
+                  label: 'Analitik',
+                  index: 3,
+                  activeColor: primary,
+                ),
+              ],
             ),
           ),
         ),

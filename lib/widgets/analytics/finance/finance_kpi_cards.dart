@@ -79,15 +79,12 @@ class FinanceKpiCards extends StatelessWidget {
                   ],
                 ),
               ),
-              // Badge angka
+              // Icon badge
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 8,
-                ),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.05),
@@ -96,13 +93,10 @@ class FinanceKpiCards extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Text(
-                  summary.transactionCount.toString(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.black87,
-                  ),
+                child: const Icon(
+                  Icons.attach_money,
+                  color: Color(0xFFFFA726),
+                  size: 24,
                 ),
               ),
             ],
