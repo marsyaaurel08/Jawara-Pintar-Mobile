@@ -33,7 +33,9 @@ class _HomePageState extends State<HomePage> {
       title: 'Tagihan',
       icon: Icons.receipt_long,
       bg: const Color(0xFF5C6BC0),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, Routes.tagihan,);
+      },
     ),
 
     // 2. Pemasukan

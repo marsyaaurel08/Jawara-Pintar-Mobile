@@ -1,3 +1,5 @@
+// file: lib/routes.dart
+
 import 'package:flutter/material.dart';
 import 'package:jawara_pintar_mobile/pages/keuangan/laporan.dart';
 import 'package:jawara_pintar_mobile/pages/keuangan/pemasukan.dart';
@@ -13,6 +15,7 @@ import 'pages/user_management_screen.dart';
 import 'pages/activity_log_screen.dart';
 import 'pages/resident_approvals_screen.dart';
 import 'pages/family_mutation_screen.dart';
+import 'pages/tagihan_page.dart'; // <<< Import yang benar
 
 class Routes {
   static const login = '/login';
