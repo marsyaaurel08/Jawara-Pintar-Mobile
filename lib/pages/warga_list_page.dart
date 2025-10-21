@@ -1,4 +1,3 @@
-// file: lib/warga_list_page.dart (Mengacu pada konteks Anda, ini adalah WargaListPage)
 import 'package:flutter/material.dart';
 import '../pages/tambah_warga_page.dart';
 import '../pages/edit_warga_page.dart';
@@ -58,7 +57,7 @@ class _WargaListPageState extends State<WargaListPage> {
     {
       "nama": "Anti Micin",
       "nik": "1234567890987654",
-      "keluarga": "Keluarga Anti Micin",
+      "keluarga": "Keluarga Anti Micin Yang Super Duper Panjang Banget Sampai Tiga Baris", // Data sengaja dibuat panjang
       "jenisKelamin": "Laki-laki",
       "tempatLahir": "Surabaya",
       "tanggalLahir": "1970-07-25",
@@ -325,7 +324,7 @@ class _WargaListPageState extends State<WargaListPage> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: _primaryColor,
+                backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
               ),
               onPressed: () {
@@ -350,67 +349,6 @@ class _WargaListPageState extends State<WargaListPage> {
         _selectedKeluarga != null;
 
     return Scaffold(
-      // appBar: PreferredSize(
-      //   preferredSize: const Size.fromHeight(80),
-      //   child: AppBar(
-      //     backgroundColor: const Color.fromARGB(255, 5, 117, 209),
-      //     elevation: 0,
-      //     automaticallyImplyLeading: false,
-      //     flexibleSpace: Container(
-      //       decoration: BoxDecoration(
-      //         gradient: LinearGradient(
-      //           colors: [
-      //             const Color.fromARGB(255, 5, 117, 209),
-      //             const Color.fromARGB(255, 3, 95, 170),
-      //           ],
-      //           begin: Alignment.topLeft,
-      //           end: Alignment.bottomRight,
-      //         ),
-      //       ),
-      //       child: SafeArea(
-      //         child: Padding(
-      //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-      //           child: Column(
-      //             mainAxisAlignment: MainAxisAlignment.center,
-      //             crossAxisAlignment: CrossAxisAlignment.start,
-      //             children: [
-      //               Row(
-      //                 children: [
-      //                   IconButton(
-      //                     icon: const Icon(Icons.arrow_back, color: Colors.white),
-      //                     onPressed: () => Navigator.pop(context),
-      //                   ),
-      //                   const SizedBox(width: 4),
-      //                   Container(
-      //                     padding: const EdgeInsets.all(8),
-      //                     decoration: BoxDecoration(
-      //                       color: Colors.white.withOpacity(0.2),
-      //                       borderRadius: BorderRadius.circular(10),
-      //                     ),
-      //                     child: const Icon(
-      //                       Icons.people_outline,
-      //                       color: Colors.white,
-      //                       size: 24,
-      //                     ),
-      //                   ),
-      //                   const SizedBox(width: 12),
-      //                   const Text(
-      //                     'Data Warga',
-      //                     style: TextStyle(
-      //                       color: Colors.white,
-      //                       fontSize: 22,
-      //                       fontWeight: FontWeight.bold,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // ),
       body: Column(
         children: [
           // Search Bar and Filter Button
@@ -530,11 +468,6 @@ class _WargaListPageState extends State<WargaListPage> {
                           ? Colors.blue.shade700
                           : _warningColor;
 
-                      // Ikon ini yang Dihapus/Diganti:
-                      // final genderIcon = warga['jenisKelamin'] == 'Laki-laki'
-                      //     ? Icons.male
-                      //     : Icons.female;
-
                       return Card(
                         margin: const EdgeInsets.symmetric(
                           horizontal: 10,
@@ -555,15 +488,13 @@ class _WargaListPageState extends State<WargaListPage> {
                                 radius: 24,
                                 backgroundColor: _primaryColor.withOpacity(0.1),
                                 child: const Icon(
-                                  Icons
-                                      .person_pin, // Mengganti ikon gender dengan ikon profile
+                                  Icons.person_pin,
                                   color: _primaryColor,
-                                  size:
-                                      32, // Dibuat sedikit lebih besar agar menonjol
+                                  size: 32,
                                 ),
                               ),
 
-                              // --- TITLE: Nama Lengkap ---
+                              // --- TITLE: Nama Lengkap (Sudah dibatasi) ---
                               title: Text(
                                 warga['nama'],
                                 style: const TextStyle(
@@ -589,17 +520,21 @@ class _WargaListPageState extends State<WargaListPage> {
                                         color: Colors.grey,
                                       ),
                                       const SizedBox(width: 5),
-                                      Text(
-                                        "NIK: ${warga['nik']}",
-                                        style: const TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 12,
+                                      // 💥 PERBAIKAN PENTING DI SINI: Wrap NIK dengan Expanded
+                                      Expanded(
+                                        child: Text(
+                                          "NIK: ${warga['nik']}",
+                                          style: const TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 12,
+                                          ),
+                                          overflow: TextOverflow.ellipsis, // Mencegah overflow NIK
                                         ),
                                       ),
                                     ],
                                   ),
                                   const SizedBox(height: 2),
-                                  // Keluarga & Peran
+                                  // Keluarga & Peran (Sudah dibatasi)
                                   Row(
                                     children: [
                                       const Icon(
@@ -615,7 +550,7 @@ class _WargaListPageState extends State<WargaListPage> {
                                             color: Colors.black54,
                                             fontSize: 12,
                                           ),
-                                          overflow: TextOverflow.ellipsis,
+                                          overflow: TextOverflow.ellipsis, // Mencegah overflow Nama Keluarga
                                         ),
                                       ),
                                     ],
@@ -639,15 +574,14 @@ class _WargaListPageState extends State<WargaListPage> {
                                 ],
                               ),
 
-                              // --- TRAILING: Tombol Aksi (Edit) ---
+                              // --- TRAILING: Tombol Aksi (Edit & Hapus) ---
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   // Icon Edit
                                   IconButton(
                                     icon: const Icon(
-                                      Icons
-                                          .edit_note_rounded, // Ikon edit dengan pena
+                                      Icons.edit_note_rounded,
                                       color: _primaryColor,
                                       size: 26,
                                     ),
@@ -658,8 +592,7 @@ class _WargaListPageState extends State<WargaListPage> {
                                   // Icon Hapus
                                   IconButton(
                                     icon: const Icon(
-                                      Icons
-                                          .delete_forever_rounded, // Ikon hapus yang tegas
+                                      Icons.delete_forever_rounded,
                                       color: Colors.red,
                                       size: 26,
                                     ),

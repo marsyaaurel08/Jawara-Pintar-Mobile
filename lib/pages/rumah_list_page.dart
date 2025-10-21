@@ -45,7 +45,8 @@ class _RumahListPageState extends State<RumahListPage> {
     {
       "id": 2,
       "no_rumah": "4",
-      "alamat": "Jl. Brawijaya 45, Komplek Perumahan Indah",
+      "alamat":
+          "Jl. Brawijaya 45, Komplek Perumahan Indah Sekali Dengan Nama Yang Sangat Panjang", // Alamat panjang untuk testing overflow
       "status": "Tersedia",
       "luas": 80,
       "jenis": "Semi Permanen",
@@ -62,7 +63,8 @@ class _RumahListPageState extends State<RumahListPage> {
       "status": "Ditempati",
       "luas": 100,
       "jenis": "Permanen",
-      "penghuni": "Keluarga Anti Micin",
+      "penghuni":
+          "Keluarga Anti Micin Yang Super Duper Panjang Banget Sampai Tiga Baris Lebih", // Penghuni panjang untuk testing overflow
       "rt": "005",
       "rw": "03",
       "keluarga": "Keluarga Anti Micin",
@@ -205,8 +207,7 @@ class _RumahListPageState extends State<RumahListPage> {
           rumah['no_rumah'].contains(_searchQuery);
 
       final matchesFilter = isFilterActive
-          ? (rumah['status'] ==
-                'Tersedia') // Contoh: hanya tampilkan yang tersedia
+          ? (rumah['status'] == 'Tersedia') // Contoh: hanya tampilkan yang tersedia
           : true;
 
       return matchesSearch && matchesFilter;
@@ -218,12 +219,13 @@ class _RumahListPageState extends State<RumahListPage> {
   // --- Widget pembantu untuk Badge Status (Hanya merubah padding) ---
   Widget _buildStatusBadge(String label, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3), // Padding sedikit dikurangi
+      padding: const EdgeInsets.symmetric(
+          horizontal: 7, vertical: 3), // Padding sedikit dikurangi
       decoration: BoxDecoration(
         color: color.withOpacity(0.15),
         borderRadius: BorderRadius.circular(
           5,
-        ), 
+        ),
         border: Border.all(color: color, width: 0.8),
       ),
       child: Text(
@@ -245,70 +247,6 @@ class _RumahListPageState extends State<RumahListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50, // Memberi background di luar card
-      // Menggunakan AppBar dengan container biru
-      // appBar: PreferredSize(
-      //   preferredSize: const Size.fromHeight(80),
-      //   child: AppBar(
-      //     backgroundColor: const Color.fromARGB(255, 5, 117, 209),
-      //     elevation: 0,
-      //     automaticallyImplyLeading: false, // Disable automatic back button
-      //     flexibleSpace: Container(
-      //       decoration: BoxDecoration(
-      //         gradient: LinearGradient(
-      //           colors: [
-      //             const Color.fromARGB(255, 5, 117, 209),
-      //             const Color.fromARGB(255, 3, 95, 170),
-      //           ],
-      //           begin: Alignment.topLeft,
-      //           end: Alignment.bottomRight,
-      //         ),
-      //       ),
-      //       child: SafeArea(
-      //         child: Padding(
-      //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-      //           child: Column(
-      //             mainAxisAlignment: MainAxisAlignment.center,
-      //             crossAxisAlignment: CrossAxisAlignment.start,
-      //             children: [
-      //               Row(
-      //                 children: [
-      //                   // Back button putih
-      //                   IconButton(
-      //                     icon: const Icon(Icons.arrow_back, color: Colors.white),
-      //                     onPressed: () => Navigator.pop(context),
-      //                   ),
-      //                   const SizedBox(width: 4),
-      //                   // Icon rumah
-      //                   Container(
-      //                     padding: const EdgeInsets.all(8),
-      //                     decoration: BoxDecoration(
-      //                       color: Colors.white.withOpacity(0.2),
-      //                       borderRadius: BorderRadius.circular(10),
-      //                     ),
-      //                     child: const Icon(
-      //                       Icons.home_outlined,
-      //                       color: Colors.white,
-      //                       size: 24,
-      //                     ),
-      //                   ),
-      //                   const SizedBox(width: 12),
-      //                   const Text(
-      //                     'Data Rumah',
-      //                     style: TextStyle(
-      //                       color: Colors.white,
-      //                       fontSize: 22,
-      //                       fontWeight: FontWeight.bold,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // ),
 
       body: Column(
         children: [
@@ -350,9 +288,7 @@ class _RumahListPageState extends State<RumahListPage> {
                 // Button Filter
                 Container(
                   decoration: BoxDecoration(
-                    color: isFilterActive
-                        ? _primaryColor
-                        : Colors.grey.shade300,
+                    color: isFilterActive ? _primaryColor : Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: IconButton(
@@ -416,6 +352,7 @@ class _RumahListPageState extends State<RumahListPage> {
                         const Text(
                           'Tidak ada data rumah yang cocok.',
                           style: TextStyle(fontSize: 15.0, color: Colors.grey),
+                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
@@ -424,8 +361,8 @@ class _RumahListPageState extends State<RumahListPage> {
                     padding: const EdgeInsets.only(
                       top: 8.0,
                       // PERBAIKAN: Padding bawah ditingkatkan untuk menghindari bottom overflow
-                      bottom: 100.0, 
-                    ), 
+                      bottom: 100.0,
+                    ),
                     itemCount: _filteredRumahList.length,
                     itemBuilder: (context, index) {
                       final rumah = _filteredRumahList[index];
@@ -453,31 +390,34 @@ class _RumahListPageState extends State<RumahListPage> {
   }
 
   // --------------------------------------------------------------------------
-  // WIDGET: Card untuk setiap item rumah (Penyesuaian Ukuran)
+  // WIDGET: Card untuk setiap item rumah (Penyesuaian Ukuran & Perbaikan Overflow)
   // --------------------------------------------------------------------------
   Widget _buildRumahCard(Map<String, dynamic> rumah) {
     final isTersedia = rumah['status'] == 'Tersedia';
     final statusColor = isTersedia ? _accentColor : _primaryColor;
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6), // Margin vertikal dikurangi (dari 8)
+      margin:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 6), // Margin vertikal dikurangi (dari 8)
       elevation: 4, // Elevation dikurangi (dari 5)
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12), // Radius dikurangi (dari 15)
       ),
       child: InkWell(
-        onTap: () => _navigateToDetail(rumah), 
+        onTap: () => _navigateToDetail(rumah),
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0), // Padding vertikal dikurangi
+          padding: const EdgeInsets.symmetric(
+              vertical: 8.0, horizontal: 8.0), // Padding vertikal dikurangi
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 4.0), // Tambah content padding
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 4.0), // Tambah content padding
             // LEADING: Ikon Rumah
             leading: CircleAvatar(
               radius: 22, // Radius dikurangi (dari 24)
               backgroundColor: statusColor.withOpacity(
                 0.1,
-              ), 
+              ),
               child: Icon(
                 Icons.house_siding_rounded,
                 color: statusColor,
@@ -485,16 +425,17 @@ class _RumahListPageState extends State<RumahListPage> {
               ),
             ),
 
-            // --- TITLE: Nomor Rumah/Alamat Utama ---
+            // --- TITLE: Nomor Rumah/Alamat Utama (Sudah Diatasi Overflow) ---
             title: Text(
               "${rumah['alamat']}",
               style: TextStyle(
-                fontWeight: FontWeight.w800, 
+                fontWeight: FontWeight.w800,
                 fontSize: _cardTitleSize, // Menggunakan ukuran yang sudah disesuaikan
                 color: _textColor,
               ),
+              // PERBAIKAN: Title adalah bagian utama yang cenderung overflow
               overflow: TextOverflow.ellipsis,
-              maxLines: 2, 
+              maxLines: 2,
             ),
 
             // --- SUBTITLE: Detail Info Bawah ---
@@ -511,11 +452,14 @@ class _RumahListPageState extends State<RumahListPage> {
                       color: Colors.grey,
                     ),
                     const SizedBox(width: 4), // Lebar dikurangi (dari 5)
-                    Text(
-                      "${rumah['jenis']} | Luas: ${rumah['luas']} m²",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: _cardSubtitleSize, // Menggunakan ukuran yang sudah disesuaikan
+                    Expanded( // Diberi Expanded agar tidak overflow jika teks jenis atau luas sangat panjang
+                      child: Text(
+                        "${rumah['jenis']} | Luas: ${rumah['luas']} m²",
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: _cardSubtitleSize, // Menggunakan ukuran yang sudah disesuaikan
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -524,7 +468,8 @@ class _RumahListPageState extends State<RumahListPage> {
                 // Penghuni (Jika Ditempati)
                 if (!isTersedia)
                   Padding(
-                    padding: const EdgeInsets.only(top: 3.0), // Padding dikurangi (dari 4)
+                    padding:
+                        const EdgeInsets.only(top: 3.0), // Padding dikurangi (dari 4)
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -534,15 +479,18 @@ class _RumahListPageState extends State<RumahListPage> {
                           color: Colors.grey,
                         ),
                         const SizedBox(width: 4), // Lebar dikurangi (dari 5)
+                        // 💥 PERBAIKAN PENTING DI SINI: Wrap teks Penghuni dengan Expanded
                         Expanded(
                           child: Text(
                             "Penghuni: ${rumah['penghuni'] ?? '-'}",
                             style: TextStyle(
                               color: Colors.grey.shade700,
-                              fontSize: _cardSubtitleSize, // Menggunakan ukuran yang sudah disesuaikan
+                              fontSize:
+                                  _cardSubtitleSize, // Menggunakan ukuran yang sudah disesuaikan
                             ),
+                            // Mencegah overflow pada nama penghuni yang panjang
                             overflow: TextOverflow.ellipsis,
-                            maxLines: 1, 
+                            maxLines: 1,
                           ),
                         ),
                       ],
@@ -563,27 +511,29 @@ class _RumahListPageState extends State<RumahListPage> {
                 // Icon Edit
                 IconButton(
                   icon: const Icon(
-                    Icons.edit_note_rounded, 
+                    Icons.edit_note_rounded,
                     color: _primaryColor,
                     size: 24, // Ukuran ikon dikurangi (dari 26)
                   ),
                   onPressed: () => _navigateToEdit(context, rumah),
                   tooltip: 'Edit Data Rumah',
                   padding: EdgeInsets.zero, // Menghilangkan padding default
-                  constraints: const BoxConstraints(), // Menghilangkan batasan ukuran min
+                  constraints:
+                      const BoxConstraints(), // Menghilangkan batasan ukuran min
                 ),
                 const SizedBox(width: 6), // Jarak dipertahankan
                 // Icon Hapus
                 IconButton(
                   icon: const Icon(
-                    Icons.delete_forever_rounded, 
+                    Icons.delete_forever_rounded,
                     color: Colors.red,
                     size: 24, // Ukuran ikon dikurangi (dari 26)
                   ),
                   onPressed: () => _onDeleteRumah(rumah),
                   tooltip: 'Hapus Data Rumah',
                   padding: EdgeInsets.zero, // Menghilangkan padding default
-                  constraints: const BoxConstraints(), // Menghilangkan batasan ukuran min
+                  constraints:
+                      const BoxConstraints(), // Menghilangkan batasan ukuran min
                 ),
               ],
             ),

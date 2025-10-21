@@ -463,15 +463,15 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
                           _searchQuery = value;
                         });
                       },
-                      style: const TextStyle(fontSize: 14.0, color: _textColor),
+                      style: const TextStyle(fontSize: 14.0),
                       decoration: InputDecoration(
                         hintText: 'Cari nama keluarga...',
-                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade500),
+                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade50),
                         prefixIcon:
                             const Icon(Icons.search, color: _primaryColor, size: 20),
                         border: InputBorder.none,
                         contentPadding:
-                            const EdgeInsets.symmetric(vertical: 14.0, horizontal: 12),
+                            const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
                       ),
                     ),
                   ),
