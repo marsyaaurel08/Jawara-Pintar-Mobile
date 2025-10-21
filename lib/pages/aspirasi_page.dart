@@ -8,13 +8,15 @@ class AspirasiPage extends StatefulWidget {
 }
 
 class _AspirasiPageState extends State<AspirasiPage> {
+  final TextEditingController _searchController = TextEditingController();
+  
   // Data dummy untuk contoh
-  final List<Map<String, dynamic>> _kegiatanData = [
+  final List<Map<String, dynamic>> _AspirasiData = [
     {
       'id': 1,
       'pengirim': 'John Doe',
       'judul': 'Rapat Koordinasi Bulanan',
-      'status': 'Selesai',
+      'status': 'Diterima',
       'tanggal': '2024-01-15',
       'deskripsi': 'Rapat koordinasi untuk membahas progress bulanan'
     },
@@ -22,7 +24,7 @@ class _AspirasiPageState extends State<AspirasiPage> {
       'id': 2,
       'pengirim': 'Jane Smith',
       'judul': 'Pelatihan Flutter',
-      'status': 'Berlangsung',
+      'status': 'Pending',
       'tanggal': '2024-01-20',
       'deskripsi': 'Pelatihan pengembangan aplikasi mobile dengan Flutter'
     },
@@ -30,27 +32,40 @@ class _AspirasiPageState extends State<AspirasiPage> {
       'id': 3,
       'pengirim': 'Bob Johnson',
       'judul': 'Webinar Digital Marketing',
-      'status': 'Akan Datang',
+      'status': 'Ditolak',
       'tanggal': '2024-02-01',
       'deskripsi': 'Webinar tentang strategi digital marketing terbaru'
     },
   ];
 
-  void _showDetailDialog(Map<String, dynamic> kegiatan) {
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'Diterima':
+        return Colors.green;
+      case 'Pending':
+        return Colors.orange;
+      case 'Ditolak':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  void _showDetailDialog(Map<String, dynamic> Aspirasi) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(kegiatan['judul']),
+          title: Text(Aspirasi['judul']),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildDetailRow('Pengirim', kegiatan['pengirim']),
-                _buildDetailRow('Status', kegiatan['status']),
-                _buildDetailRow('Tanggal Dibuat', kegiatan['tanggal']),
-                _buildDetailRow('Deskripsi', kegiatan['deskripsi']),
+                _buildDetailRow('Pengirim', Aspirasi['pengirim']),
+                _buildDetailRow('Status', Aspirasi['status']),
+                _buildDetailRow('Tanggal Dibuat', Aspirasi['tanggal']),
+                _buildDetailRow('Deskripsi', Aspirasi['deskripsi']),
               ],
             ),
           ),
@@ -83,23 +98,40 @@ class _AspirasiPageState extends State<AspirasiPage> {
     );
   }
 
-  void _editKegiatan(Map<String, dynamic> kegiatan) {
-    // Implementasi edit kegiatan
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Edit kegiatan: ${kegiatan['judul']}'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _deleteKegiatan(int id) {
+  void _editStatus(Map<String, dynamic> Aspirasi) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        String newStatus = Aspirasi['status'];
+        
         return AlertDialog(
-          title: const Text('Hapus Kegiatan'),
-          content: const Text('Apakah Anda yakin ingin menghapus kegiatan ini?'),
+          title: const Text('Ubah Status'),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Pilih status baru:'),
+                  const SizedBox(height: 16),
+                  DropdownButton<String>(
+                    value: newStatus,
+                    onChanged: (String? value) {
+                      setState(() {
+                        newStatus = value!;
+                      });
+                    },
+                    items: ['Diterima', 'Pending', 'Ditolak']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              );
+            },
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -108,12 +140,45 @@ class _AspirasiPageState extends State<AspirasiPage> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  _kegiatanData.removeWhere((item) => item['id'] == id);
+                  Aspirasi['status'] = newStatus;
+                });
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Status berhasil diubah menjadi $newStatus'),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              },
+              child: const Text('SIMPAN'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteAspirasi(int id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Hapus Aspirasi'),
+          content: const Text('Apakah Anda yakin ingin menghapus Aspirasi ini?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('BATAL'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _AspirasiData.removeWhere((item) => item['id'] == id);
                 });
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Kegiatan berhasil dihapus'),
+                    content: Text('Aspirasi berhasil dihapus'),
                     duration: Duration(seconds: 2),
                   ),
                 );
@@ -129,117 +194,275 @@ class _AspirasiPageState extends State<AspirasiPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Daftar Kegiatan'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Header informasi
-            Card(
-              elevation: 2,
+      backgroundColor: Colors.grey.shade100,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80),
+        child: AppBar(
+          backgroundColor: const Color.fromARGB(255, 5, 117, 209),
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 5, 117, 209),
+                  Color.fromARGB(255, 3, 95, 170),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.info_outline, color: Colors.blue.shade700),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Tabel menampilkan judul dan aksi. Klik detail untuk informasi lengkap.',
-                        style: TextStyle(
-                          color: Colors.grey.shade700,
-                          fontSize: 12,
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
                         ),
-                      ),
+                        const SizedBox(width: 4),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.feedback_outlined,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Aspirasi',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            
-            // Tabel kegiatan
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: DataTable(
-                    headingRowColor: MaterialStateProperty.resolveWith<Color?>(
-                      (Set<MaterialState> states) => Colors.grey.shade100,
+          ),
+        ),
+      ),
+      body: Column(
+        children: [
+          // Search bar dan filter
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                    columns: const [
-                      DataColumn(
-                        label: Text(
-                          'No',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: const InputDecoration(
+                        hintText: 'Cari Aspirasi...',
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.search),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
                       ),
-                      DataColumn(
-                        label: Text(
-                          'Judul Kegiatan',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Aksi',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
                       ),
                     ],
-                    rows: _kegiatanData.asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final kegiatan = entry.value;
-                      
-                      return DataRow(
-                        cells: [
-                          DataCell(Text('${index + 1}')),
-                          DataCell(
-                            Text(
-                              kegiatan['judul'],
-                              style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.filter_list),
+                    onPressed: () {
+                      // Implementasi filter
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Daftar kartu Aspirasi
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ListView.builder(
+                itemCount: _AspirasiData.length,
+                itemBuilder: (context, index) {
+                  final Aspirasi = _AspirasiData[index];
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          // Nomor urut
+                          Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${index + 1}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
-                          DataCell(
-                            Row(
+                          const SizedBox(width: 16),
+
+                          // Informasi Aspirasi
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                IconButton(
-                                  icon: const Icon(Icons.remove_red_eye, size: 18),
-                                  color: Colors.blue,
-                                  onPressed: () => _showDetailDialog(kegiatan),
-                                  tooltip: 'Detail',
+                                Text(
+                                  Aspirasi['judul'],
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                                IconButton(
-                                  icon: const Icon(Icons.edit, size: 18),
-                                  color: Colors.orange,
-                                  onPressed: () => _editKegiatan(kegiatan),
-                                  tooltip: 'Edit',
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete, size: 18),
-                                  color: Colors.red,
-                                  onPressed: () => _deleteKegiatan(kegiatan['id']),
-                                  tooltip: 'Hapus',
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Pengirim: ${Aspirasi['pengirim']}',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
+
+                          // Status button
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getStatusColor(Aspirasi['status']).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: _getStatusColor(Aspirasi['status']),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              Aspirasi['status'],
+                              style: TextStyle(
+                                color: _getStatusColor(Aspirasi['status']),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(width: 12),
+
+                          // Menu dropdown (tiga titik)
+                          PopupMenuButton<String>(
+                            icon: const Icon(Icons.more_vert),
+                            onSelected: (value) {
+                              switch (value) {
+                                case 'detail':
+                                  _showDetailDialog(Aspirasi);
+                                  break;
+                                case 'edit':
+                                  _editStatus(Aspirasi);
+                                  break;
+                                case 'delete':
+                                  _deleteAspirasi(Aspirasi['id']);
+                                  break;
+                              }
+                            },
+                            itemBuilder: (BuildContext context) => [
+                              const PopupMenuItem<String>(
+                                value: 'detail',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.remove_red_eye, size: 18),
+                                    SizedBox(width: 8),
+                                    Text('Detail'),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem<String>(
+                                value: 'edit',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.edit, size: 18),
+                                    SizedBox(width: 8),
+                                    Text('Edit Status'),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem<String>(
+                                value: 'delete',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.delete, size: 18, color: Colors.red),
+                                    SizedBox(width: 8),
+                                    Text('Hapus', style: TextStyle(color: Colors.red)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
-                      );
-                    }).toList(),
-                  ),
-                ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
