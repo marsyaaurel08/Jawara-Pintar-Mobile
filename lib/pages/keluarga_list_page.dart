@@ -424,17 +424,17 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: Colors.grey.shade50,
 
-      appBar: AppBar(
-        backgroundColor: _primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0, 
-        title: const Text(
-          'Daftar Keluarga',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: _primaryColor,
+      //   foregroundColor: Colors.white,
+      //   elevation: 0, 
+      //   title: const Text(
+      //     'Daftar Keluarga',
+      //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+      //   ),
+      // ),
 
       body: Column(
         children: [
@@ -560,11 +560,8 @@ class _KeluargaListPageState extends State<KeluargaListPage> {
         },
         backgroundColor: _primaryColor,
         foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
         tooltip: 'Tambah Keluarga',
-        shape: RoundedRectangleBorder( 
-          borderRadius: BorderRadius.circular(12.0), 
-        ),
+        child: const Icon(Icons.add, size: 28),
       ),
     );
   }
